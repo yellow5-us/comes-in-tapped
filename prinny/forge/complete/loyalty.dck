@@ -1,0 +1,29 @@
+[metadata]
+Name=loyalty
+
+[Main]
+2 Aether Hub|KLD
+3 Animation Module|KLD
+4 Botanical Sanctum|KLD
+2 Chandra, Torch of Defiance|KLD
+3 Cryptolith Rite|SOI
+3 Declaration in Stone|SOI
+2 Dovin Baan|KLD
+6 Forest|ZNR
+2 Fortified Village|SOI
+3 Maulfist Revolutionary|AER
+2 Nissa, Voice of Zendikar|OGW
+3 Oath of Nissa|OGW
+3 Oviya Pashiri, Sage Lifecrafter|KLD
+5 Plains|ZNR
+2 Port Town|SOI
+2 Saheeli Rai|KLD
+4 Skyship Plunderer|AER
+2 Tamiyo, Field Researcher|EMN
+4 Thalia's Lieutenant|SOI
+3 Thraben Inspector|SOI
+
+[Sideboard]
+1 Dovin Baan|KLD
+1 Eldritch Evolution|EMN
+1 Oath of Gideon|OGW
