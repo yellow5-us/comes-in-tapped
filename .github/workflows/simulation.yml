@@ -111,3 +111,10 @@ jobs:
           export DISPLAY=:99
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
           java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${{ steps.jar.outputs.name }} sim -d "${{ inputs.deck_1 }}" "${{ inputs.deck_2 }}" -n ${{ needs.sanitize.outputs.rounds }}
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: forge.log
+          path: ${{ env.HOME }}/.forge/forge.log
