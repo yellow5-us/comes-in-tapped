@@ -43,6 +43,8 @@ jobs:
     name: Sanitize
     outputs:
       rounds: ${{ steps.sanitize.outputs.rounds }}
+      deck_1: ${{ steps.sanitize.outputs.deck_1 }}
+      deck_2: ${{ steps.sanitize.outputs.deck_2 }}
     runs-on: ubuntu-latest
     steps:
       - name: Sanitize inputs
@@ -50,7 +52,13 @@ jobs:
         run: |
           rounds="$(( ${{ inputs.rounds }} + 0 ))"
           if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
-          echo "rounds=$rounds" >> $GITHUB_OUTPUT
+          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+
+          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)$/\1/')
+          echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
+
+          deck_2=$(echo '${{ inputs.deck_2 }}' | sed -r 's/^.+\/([^\/]+)$/\1/')
+          echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
 
   sim:
     name: Run simulation
@@ -97,7 +105,7 @@ jobs:
         run: |
           echo "name=$(ls forge-gui-desktop-*.jar)" >> $GITHUB_OUTPUT
 
-      - name: 'Run simulation ${{ needs.sanitize.outputs.rounds }} time(s)'
+      - name: 'Run ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} ${{ needs.sanitize.outputs.rounds }} time(s)'
         working-directory: ${{ env.HOME }}/forge
         run: |
           export DISPLAY=:99
