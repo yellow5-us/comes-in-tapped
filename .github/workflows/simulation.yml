@@ -1,0 +1,105 @@
+name: 'Run simulation'
+
+on:
+  workflow_dispatch:
+    inputs:
+      deck_1:
+        description: Deck 1
+        type: string
+        required: true
+        default: 'prinny/forge/complete/absol.dck'
+      deck_2:
+        description: Deck 2
+        type: string
+        required: true
+        default: 'prinny/forge/complete/altaria.dck'
+      rounds:
+        description: Rounds
+        type: string
+        required: true
+        default: 10
+  workflow_call:
+    inputs:
+      deck_1:
+        description: Deck 1
+        type: string
+        required: true
+      deck_2:
+        description: Deck 2
+        type: string
+        required: true
+      rounds:
+        description: Rounds
+        type: string
+        required: true
+        default: 10
+
+env:
+  FORGE_SNAPSHOT_URL: https://downloads.cardforge.org/dailysnapshots/
+  HOME: /home/runner
+
+jobs:
+  sanitize:
+    name: Sanitize
+    outputs:
+      rounds: ${{ steps.sanitize.outputs.rounds }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sanitize inputs
+        id: sanitize
+        run: |
+          rounds="$(( ${{ inputs.rounds }} + 0 ))"
+          if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
+          echo "rounds=$rounds" >> $GITHUB_OUTPUT
+
+  sim:
+    name: Run simulation
+    needs: [sanitize]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Symlink deck path
+        run: |
+          mkdir -p $HOME/.forge/decks
+          ln -s $HOME/work/comes-in-tapped/comes-in-tapped $HOME/.forge/decks/constructed
+
+      - name: Cache Forge install
+        id: cache-forge
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.HOME }}/forge
+          key: forge
+          restore-keys: forge
+
+      - name: Get latest version
+        id: version
+        if: steps.cache-forge.outputs.cache-hit != 'true'
+        run: |
+          echo "name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-gui-desktop.+\.tar.bz2"' | sed -r 's/"//g')" >> $GITHUB_OUTPUT
+
+      - name: Install forge
+        if: steps.cache-forge.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p $HOME/forge && cd $HOME/forge
+          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${{ steps.version.outputs.name }} -o ./${{ steps.version.outputs.name }} && tar -xf ${{ steps.version.outputs.name }} && rm -f ${{ steps.version.outputs.name }}
+
+      - name: Get jar file name
+        id: jar
+        working-directory: ${{ env.HOME }}/forge
+        run: |
+          echo "name=$(ls forge-gui-desktop-*.jar)" >> $GITHUB_OUTPUT
+
+      - name: 'Run simulation ${{ needs.sanitize.outputs.rounds }} time(s)'
+        working-directory: ${{ env.HOME }}/forge
+        run: |
+          export DISPLAY=:99
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+          java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${{ steps.jar.outputs.name }} sim -d "${{ inputs.deck_1 }}" "${{ inputs.deck_2 }}" -n ${{ needs.sanitize.outputs.rounds }}
