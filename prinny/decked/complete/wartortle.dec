@@ -22,15 +22,17 @@
 4 Plains
 ///mvid:401998 qty:4 name:Prairie Stream loc:Deck
 4 Prairie Stream
-///mvid:526700 qty:3 name:Search the Premises loc:Deck
-3 Search the Premises
 ///mvid:585751 qty:4 name:Teething Wurmlet loc:Deck
 4 Teething Wurmlet
 ///mvid:409784 qty:4 name:Thraben Inspector loc:Deck
 4 Thraben Inspector
 ///mvid:409997 qty:4 name:Tireless Tracker loc:Deck
 4 Tireless Tracker
+///mvid:410000 qty:3 name:Ulvenwald Mysteries loc:Deck
+3 Ulvenwald Mysteries
 ///mvid:525135 qty:1 name:Academy Manufactor loc:SB
 SB: 1 Academy Manufactor
 ///mvid:409805 qty:1 name:Fleeting Memories loc:SB
 SB: 1 Fleeting Memories
+///mvid:526700 qty:1 name:Search the Premises loc:SB
+SB: 1 Search the Premises
