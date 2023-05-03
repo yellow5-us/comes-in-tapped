@@ -54,10 +54,10 @@ jobs:
           if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
           echo "rounds=${rounds}" >> $GITHUB_OUTPUT
 
-          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)$/\1/')
+          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
           echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
 
-          deck_2=$(echo '${{ inputs.deck_2 }}' | sed -r 's/^.+\/([^\/]+)$/\1/')
+          deck_2=$(echo '${{ inputs.deck_2 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
           echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
 
   sim:
