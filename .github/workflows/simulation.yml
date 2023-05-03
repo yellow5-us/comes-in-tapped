@@ -17,7 +17,7 @@ on:
         description: Rounds
         type: string
         required: true
-        default: 10
+        default: '3'
   workflow_call:
     inputs:
       deck_1:
@@ -32,11 +32,11 @@ on:
         description: Rounds
         type: string
         required: true
-        default: 10
+        default: '3'
 
 env:
-  FORGE_SNAPSHOT_URL: https://downloads.cardforge.org/dailysnapshots/
-  HOME: /home/runner
+  FORGE_SNAPSHOT_URL: 'https://downloads.cardforge.org/dailysnapshots/'
+  HOME: '/home/runner'
 
 jobs:
   sanitize:
@@ -68,17 +68,12 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - name: Checkout
+      - name: 'Checkout'
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Symlink deck path
-        run: |
-          mkdir -p $HOME/.forge/decks
-          ln -s $HOME/work/comes-in-tapped/comes-in-tapped $HOME/.forge/decks/constructed
-
-      - name: Cache Forge install
+      - name: 'Forge cache check'
         id: cache-forge
         uses: actions/cache@v3
         with:
@@ -87,23 +82,28 @@ jobs:
           key: forge
           restore-keys: forge
 
-      - name: Get latest version
+      - name: 'Get download info'
         id: version
         if: steps.cache-forge.outputs.cache-hit != 'true'
         run: |
           echo "name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-gui-desktop.+\.tar.bz2"' | sed -r 's/"//g')" >> $GITHUB_OUTPUT
 
-      - name: Install forge
+      - name: 'Install Forge'
         if: steps.cache-forge.outputs.cache-hit != 'true'
         run: |
           mkdir -p $HOME/forge && cd $HOME/forge
           curl -s ${{ env.FORGE_SNAPSHOT_URL }}${{ steps.version.outputs.name }} -o ./${{ steps.version.outputs.name }} && tar -xf ${{ steps.version.outputs.name }} && rm -f ${{ steps.version.outputs.name }}
 
-      - name: Get jar file name
+      - name: 'Get jar file name'
         id: jar
         working-directory: ${{ env.HOME }}/forge
         run: |
           echo "name=$(ls forge-gui-desktop-*.jar)" >> $GITHUB_OUTPUT
+
+      - name: 'Symlink deck path'
+        run: |
+          mkdir -p $HOME/.forge/decks
+          rm -f $HOME/.forge/decks/constructed && ln -s $HOME/work/comes-in-tapped/comes-in-tapped $HOME/.forge/decks/constructed
 
       - name: 'Run simulation'
         working-directory: ${{ env.HOME }}/forge
