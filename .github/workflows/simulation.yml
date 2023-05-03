@@ -61,7 +61,7 @@ jobs:
           echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
 
   sim:
-    name: Run simulation
+    name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
     needs: [sanitize]
     runs-on: ubuntu-latest
     permissions:
@@ -105,7 +105,7 @@ jobs:
         run: |
           echo "name=$(ls forge-gui-desktop-*.jar)" >> $GITHUB_OUTPUT
 
-      - name: 'Run ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} ${{ needs.sanitize.outputs.rounds }} time(s)'
+      - name: 'Run simulation'
         working-directory: ${{ env.HOME }}/forge
         run: |
           export DISPLAY=:99
