@@ -1,5 +1,3 @@
-///mvid:525135 qty:3 name:Academy Manufactor loc:Deck
-3 Academy Manufactor
 ///mvid:409746 qty:4 name:Bygone Bishop loc:Deck
 4 Bygone Bishop
 ///mvid:401837 qty:4 name:Canopy Vista loc:Deck
@@ -22,17 +20,23 @@
 4 Plains
 ///mvid:401998 qty:4 name:Prairie Stream loc:Deck
 4 Prairie Stream
-///mvid:585751 qty:4 name:Teething Wurmlet loc:Deck
-4 Teething Wurmlet
+///mvid:476487 qty:2 name:Shadowspear loc:Deck
+2 Shadowspear
+///mvid:585751 qty:3 name:Teething Wurmlet loc:Deck
+3 Teething Wurmlet
+///mvid:552250 qty:2 name:Tezzeret, Betrayer of Flesh loc:Deck
+2 Tezzeret, Betrayer of Flesh
 ///mvid:409784 qty:4 name:Thraben Inspector loc:Deck
 4 Thraben Inspector
 ///mvid:409997 qty:4 name:Tireless Tracker loc:Deck
 4 Tireless Tracker
 ///mvid:410000 qty:3 name:Ulvenwald Mysteries loc:Deck
 3 Ulvenwald Mysteries
-///mvid:525135 qty:1 name:Academy Manufactor loc:SB
-SB: 1 Academy Manufactor
 ///mvid:409805 qty:1 name:Fleeting Memories loc:SB
 SB: 1 Fleeting Memories
+///mvid:607086 qty:1 name:Invasion of Segovia // Caetus, Sea Tyrant of Segovia loc:SB
+SB: 1 Invasion of Segovia // Caetus, Sea Tyrant of Segovia
+///mvid:507140 qty:1 name:Niko Aris loc:SB
+SB: 1 Niko Aris
 ///mvid:526700 qty:1 name:Search the Premises loc:SB
 SB: 1 Search the Premises

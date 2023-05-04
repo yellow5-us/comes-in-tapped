@@ -1,7 +1,6 @@
 [metadata]
 Name=wartortle
 [Main]
-3 Academy Manufactor|MH2|1
 4 Bygone Bishop|SOI|1
 4 Canopy Vista|BFZ|1
 4 Erdwal Illuminator|SOI|1
@@ -9,14 +8,16 @@ Name=wartortle
 4 Forest|ZNR|1
 3 Inspiring Statuary|AER|1
 4 Island|ZNR|1
-4 Junk Winder|MH2|1
+3 Junk Winder|MH2|1
 4 Lonis, Cryptozoologist|MH2|1
 4 Plains|ZNR|1
 4 Prairie Stream|BFZ|1
 2 Shadowspear|THB|1
-4 Teething Wurmlet|BRO|2
+3 Teething Wurmlet|BRO|2
+2 Tezzeret, Betrayer of Flesh|NEO|2
 4 Thraben Inspector|SOI|1
 4 Tireless Tracker|SOI|1
+3 Ulvenwald Mysteries|SOI|1
 [Sideboard]
 1 Fleeting Memories|SOI|1
 1 Invasion of Segovia|MOM|1
