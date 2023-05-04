@@ -19,7 +19,7 @@
 ///mvid:495101 qty:8 name:Mountain loc:Deck
 8 Mountain
 ///mvid:435401 qty:1 name:Primal Amulet // Primal Wellspring loc:Deck
-1 Primal Amulet
+1 Primal Amulet // Primal Wellspring
 ///mvid:430871 qty:1 name:Scavenger Grounds loc:Deck
 1 Scavenger Grounds
 ///mvid:5143 qty:4 name:Shock loc:Deck
@@ -35,14 +35,14 @@
 ///mvid:439699 qty:1 name:Kumena's Awakening loc:SB
 SB: 1 Kumena's Awakening
 ///mvid:435401 qty:1 name:Primal Amulet // Primal Wellspring loc:SB
-SB: 1 Primal Amulet
+SB: 1 Primal Amulet // Primal Wellspring
 ///mvid:435223 qty:1 name:River's Rebuke loc:SB
 SB: 1 River's Rebuke
 ///mvid:435226 qty:1 name:Search for Azcanta // Azcanta, the Sunken Ruin loc:SB
-SB: 1 Search for Azcanta
+SB: 1 Search for Azcanta // Azcanta, the Sunken Ruin
 ///mvid:430739 qty:1 name:Swarm Intelligence loc:SB
 SB: 1 Swarm Intelligence
 ///mvid:435408 qty:1 name:Thaumatic Compass // Spires of Orazca loc:SB
-SB: 1 Thaumatic Compass
+SB: 1 Thaumatic Compass // Spires of Orazca
 ///mvid:426776 qty:1 name:Vizier of Many Faces loc:SB
 SB: 1 Vizier of Many Faces
