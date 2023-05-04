@@ -13,7 +13,7 @@
 ///mvid:435168 qty:2 name:Ixalan's Binding loc:Deck
 2 Ixalan's Binding
 ///mvid:435173 qty:4 name:Legion's Landing // Adanto, the First Fort loc:Deck
-4 Legion's Landing
+4 Legion's Landing // Adanto, the First Fort
 ///mvid:495098 qty:12 name:Plains loc:Deck
 12 Plains
 ///mvid:435181 qty:4 name:Queen's Commission loc:Deck
@@ -28,3 +28,19 @@
 4 Swamp
 ///mvid:426939 qty:3 name:Throne of the God-Pharaoh loc:Deck
 3 Throne of the God-Pharaoh
+///mvid:417578 qty:1 name:Authority of the Consuls loc:SB
+SB: 1 Authority of the Consuls
+///mvid:426897 qty:1 name:Aven Wind Guide loc:SB
+SB: 1 Aven Wind Guide
+///mvid:423676 qty:2 name:Call for Unity loc:SB
+SB: 2 Call for Unity
+///mvid:423796 qty:4 name:Hidden Stockpile loc:SB
+SB: 4 Hidden Stockpile
+///mvid:417663 qty:1 name:Marionette Master loc:SB
+SB: 1 Marionette Master
+///mvid:426729 qty:1 name:Sacred Cat loc:SB
+SB: 1 Sacred Cat
+///mvid:423851 qty:1 name:Spire of Industry loc:SB
+SB: 1 Spire of Industry
+///mvid:423691 qty:1 name:Sram's Expertise loc:SB
+SB: 1 Sram's Expertise
