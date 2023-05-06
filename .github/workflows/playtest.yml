@@ -58,7 +58,7 @@ jobs:
 
   get_decks:
     name: Get playtest deck info
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     outputs:
       list: ${{ steps.get_decks.outputs.list }}
     steps:
@@ -69,7 +69,7 @@ jobs:
 
       - name: Get deck list
         id: get_decks
-        working_directory: playtest
+        working-directory: playtest
         run: |
           echo 'list={"deck_2": ["'$(ls *.dck | sed -r 's/\.dck$//' | tr '\n' ' ' | sed -r 's/ $//' | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
 
