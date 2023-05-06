@@ -1,0 +1,87 @@
+name: 'Run Playtests'
+
+on:
+  workflow_dispatch:
+    inputs:
+      deck_1:
+        description: Deck
+        type: string
+        required: true
+        default: 'prinny/forge/complete/absol.dck'
+      rounds:
+        description: Rounds
+        type: string
+        required: true
+        default: '7'
+  workflow_call:
+    inputs:
+      deck_1:
+        description: Deck 1
+        type: string
+        required: true
+      rounds:
+        description: Rounds
+        type: string
+        required: true
+        default: '7'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  FORGE_SNAPSHOT_URL: 'https://downloads.cardforge.org/dailysnapshots/'
+  HOME: '/home/runner'
+
+jobs:
+  cache:
+    name: 'Build cache'
+    uses: ./.github/workflows/cache.yml
+
+  sanitize:
+    name: Sanitize
+    runs-on: ubuntu-latest
+    outputs:
+      deck_1: ${{ steps.sanitize.outputs.deck_1 }}
+      rounds: ${{ steps.sanitize.outputs.rounds }}
+    steps:
+      - name: Sanitize inputs
+        id: sanitize
+        run: |
+          if [ ! -f "${{ inputs.deck_1 }}" ]; then echo "${{ inputs.deck_1 }} not found"; exit 1
+          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
+          echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
+
+          rounds="$(( ${{ inputs.rounds }} + 0 ))"
+          if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
+          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+
+  get_decks:
+    name: Get playtest deck info
+    runs_on: ubuntu-latest
+    outputs:
+      list: ${{ steps.get_decks.outputs.list }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get deck list
+        id: get_decks
+        working_directory: playtest
+        run: |
+          echo 'list={"deck_2": ["'$(ls *.dck | sed -r 's/\.dck$//' | tr '\n' ' ' | sed -r 's/ $//' | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
+
+  playtest:
+    name: 'Playtest ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ matrix.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
+    needs: [cache, sanitize, get_decks]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.get_decks.outputs.list) }}
+    uses: ./.github/workflows/simulation.yml
+    with:
+      deck_1: '${{ inputs.deck_1 }}'
+      deck_2: 'playtest/${{ matrix.deck_2 }}.dck'
+      rounds: '${{ inputs.rounds }}'
+      log_file: '${{ matrix.deck_2 }}.log'

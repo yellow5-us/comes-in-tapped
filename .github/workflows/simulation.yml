@@ -1,4 +1,4 @@
-name: 'Run simulation'
+name: '[Run simulation]'
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ on:
         description: Rounds
         type: string
         required: true
-        default: '3'
+        default: '7'
   workflow_call:
     inputs:
       deck_1:
@@ -32,7 +32,14 @@ on:
         description: Rounds
         type: string
         required: true
-        default: '3'
+        default: '7'
+      log_file:
+        description: Log filename
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
 
 env:
   FORGE_SNAPSHOT_URL: 'https://downloads.cardforge.org/dailysnapshots/'
@@ -42,38 +49,42 @@ jobs:
   sanitize:
     name: Sanitize
     outputs:
-      rounds: ${{ steps.sanitize.outputs.rounds }}
       deck_1: ${{ steps.sanitize.outputs.deck_1 }}
       deck_2: ${{ steps.sanitize.outputs.deck_2 }}
+      rounds: ${{ steps.sanitize.outputs.rounds }}
     runs-on: ubuntu-latest
-    steps:
-      - name: Sanitize inputs
-        id: sanitize
-        run: |
-          rounds="$(( ${{ inputs.rounds }} + 0 ))"
-          if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
-          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
-
-          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
-          echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
-
-          deck_2=$(echo '${{ inputs.deck_2 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
-          echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
-
-  sim:
-    name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
-    needs: [sanitize]
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: 'Forge cache check'
+      - name: Sanitize inputs
+        id: sanitize
+        run: |
+          if [ ! -f "${{ inputs.deck_1 }}" ]; then echo "${{ inputs.deck_1 }} not found"; exit 1
+          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
+          echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
+
+          if [ ! -f "${{ inputs.deck_2 }}" ]; then echo "${{ inputs.deck_2 }} not found"; exit 1
+          deck_2=$(echo '${{ inputs.deck_2 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
+          echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
+
+          rounds="$(( ${{ inputs.rounds }} + 0 ))"
+          if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
+          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+
+  sim:
+    name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
+    needs: [sanitize]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Cache setup'
         id: cache-forge
         uses: actions/cache@v3
         with:
@@ -116,5 +127,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: forge.log
+          name: ${{ inputs.log_file || 'forge.log' }}
           path: ${{ env.HOME }}/.forge/forge.log

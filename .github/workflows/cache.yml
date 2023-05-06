@@ -1,0 +1,38 @@
+name: '[Initialize Cache]'
+
+on:
+  workflow_call:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  FORGE_SNAPSHOT_URL: 'https://downloads.cardforge.org/dailysnapshots/'
+  HOME: '/home/runner'
+
+jobs:
+  cache:
+    name: 'Forge cache check'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Cache setup'
+        id: cache-forge
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.HOME }}/forge
+          key: forge
+          restore-keys: forge
+
+      - name: 'Get download info'
+        id: version
+        if: steps.cache-forge.outputs.cache-hit != 'true'
+        run: |
+          echo "name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-gui-desktop.+\.tar.bz2"' | sed -r 's/"//g')" >> $GITHUB_OUTPUT
+
+      - name: 'Install Forge'
+        if: steps.cache-forge.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p $HOME/forge && cd $HOME/forge
+          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${{ steps.version.outputs.name }} -o ./${{ steps.version.outputs.name }} && tar -xf ${{ steps.version.outputs.name }} && rm -f ${{ steps.version.outputs.name }}
