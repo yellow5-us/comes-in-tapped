@@ -62,11 +62,11 @@ jobs:
       - name: Sanitize inputs
         id: sanitize
         run: |
-          if [ ! -f "${{ inputs.deck_1 }}" ]; then echo "${{ inputs.deck_1 }} not found"; exit 1
+          if [ ! -f "${{ inputs.deck_1 }}" ]; then echo "${{ inputs.deck_1 }} not found"; exit 1; fi
           deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
           echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
 
-          if [ ! -f "${{ inputs.deck_2 }}" ]; then echo "${{ inputs.deck_2 }} not found"; exit 1
+          if [ ! -f "${{ inputs.deck_2 }}" ]; then echo "${{ inputs.deck_2 }} not found"; exit 1; fi
           deck_2=$(echo '${{ inputs.deck_2 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
           echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
 
