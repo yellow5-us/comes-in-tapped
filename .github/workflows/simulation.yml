@@ -40,12 +40,15 @@ on:
         description: Throw error on match loss
         type: string
         default: 'false'
-
     outputs:
-      results_deck_1: '${{ jobs.sim.outputs.results_deck_1 }}'
-      results_score_1: '${{ jobs.sim.outputs.results_score_1 }}'
-      results_deck_2: '${{ jobs.sim.outputs.results_deck_2 }}'
-      results_score_2: '${{ jobs.sim.outputs.results_score_2 }}'
+      results_deck_1:
+        value: '${{ jobs.sim.outputs.results_deck_1 }}'
+      results_score_1:
+        value: '${{ jobs.sim.outputs.results_score_1 }}'
+      results_deck_2:
+        value: '${{ jobs.sim.outputs.results_deck_2 }}'
+      results_score_2:
+        value: '${{ jobs.sim.outputs.results_score_2 }}'
 
 permissions:
   id-token: write
