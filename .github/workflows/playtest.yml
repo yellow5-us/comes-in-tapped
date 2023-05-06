@@ -16,7 +16,7 @@ on:
   workflow_call:
     inputs:
       deck_1:
-        description: Deck 1
+        description: Deck
         type: string
         required: true
       rounds:

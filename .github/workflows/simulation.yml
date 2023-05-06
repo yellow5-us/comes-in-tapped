@@ -142,6 +142,13 @@ jobs:
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
           java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${{ steps.jar.outputs.name }} sim -d "${{ inputs.deck_1 }}" "${{ inputs.deck_2 }}" -n ${{ needs.sanitize.outputs.rounds }}
 
+      - name: 'Upload full log'
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.log_file || 'forge.log' }}
+          path: ${{ env.HOME }}/.forge/forge.log
+
       - name: 'Get match results'
         id: results
         run: |
@@ -160,13 +167,6 @@ jobs:
 
           if [ "${{ inputs.error_on_loss }}" == "true" ];
           then
-            if [ "$deck_1" == "${{ inputs.deck_1 }}" ] && [ "$score_1" -lt "$score_2" ]; then echo "You just lost the game"; exit 1; fi
-            if [ "$deck_2" == "${{ inputs.deck_1 }}" ] && [ "$score_2" -lt "$score_1" ]; then echo "You just lost the game"; exit 1; fi
+            if [ "$deck_1" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "$score_1" -lt "$score_2" ]; then echo "You just lost the game"; exit 1; fi
+            if [ "$deck_2" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "$score_2" -lt "$score_1" ]; then echo "You just lost the game"; exit 1; fi
           fi
-
-      - name: 'Upload full log'
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ inputs.log_file || 'forge.log' }}
-          path: ${{ env.HOME }}/.forge/forge.log
