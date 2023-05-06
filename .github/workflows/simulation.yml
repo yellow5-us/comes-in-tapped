@@ -90,7 +90,7 @@ jobs:
   sim:
     name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
     needs: [sanitize]
-    output:
+    outputs:
       results_deck_1: ${{ steps.results.outputs.deck_1 }}
       results_score_1: ${{ steps.results.outputs.score_1 }}
       results_deck_2: ${{ steps.results.outputs.deck_2 }}
