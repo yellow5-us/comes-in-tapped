@@ -36,6 +36,16 @@ on:
       log_file:
         description: Log filename
         type: string
+      error_on_loss:
+        description: Throw error on match loss
+        type: string
+        default: 'false'
+
+    outputs:
+      results_deck_1: '${{ jobs.sim.outputs.results_deck_1 }}'
+      results_score_1: '${{ jobs.sim.outputs.results_score_1 }}'
+      results_deck_2: '${{ jobs.sim.outputs.results_deck_2 }}'
+      results_score_2: '${{ jobs.sim.outputs.results_score_2 }}'
 
 permissions:
   id-token: write
@@ -77,6 +87,12 @@ jobs:
   sim:
     name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
     needs: [sanitize]
+    output:
+      results_deck_1: ${{ steps.results.outputs.deck_1 }}
+      results_score_1: ${{ steps.results.outputs.score_1 }}
+      results_deck_2: ${{ steps.results.outputs.deck_2 }}
+      results_score_2: ${{ steps.results.outputs.score_2 }}
+
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -123,7 +139,29 @@ jobs:
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
           java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${{ steps.jar.outputs.name }} sim -d "${{ inputs.deck_1 }}" "${{ inputs.deck_2 }}" -n ${{ needs.sanitize.outputs.rounds }}
 
-      - name: 'Upload results'
+      - name: 'Get match results'
+        id: results
+        run: |
+          line=$(grep '^Match result: ' $HOME/.forge/forge.log | tail -n 1)
+          echo $line
+
+          deck_1=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\1/')
+          score_1=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\2/')
+          deck_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\3/')
+          score_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\4/')
+
+          echo "deck_1=$deck_1" >> $GITHUB_OUTPUT
+          echo "score_1=$score_1" >> $GITHUB_OUTPUT
+          echo "deck_2=$deck_2" >> $GITHUB_OUTPUT
+          echo "score_2=$score_2" >> $GITHUB_OUTPUT
+
+          if [ "${{ inputs.error_on_loss }}" == "true" ];
+          then
+            if [ "$deck_1" == "${{ inputs.deck_1 }}" ] && [ "$score_1" -lt "$score_2" ]; then echo "Failed too many matches"; exit 1; fi
+            if [ "$deck_2" == "${{ inputs.deck_1 }}" ] && [ "$score_2" -lt "$score_1" ]; then echo "Failed too many matches"; exit 1; fi
+          fi
+
+      - name: 'Upload full log'
         if: always()
         uses: actions/upload-artifact@v3
         with:
