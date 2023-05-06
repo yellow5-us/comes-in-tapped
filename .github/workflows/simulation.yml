@@ -160,8 +160,8 @@ jobs:
 
           if [ "${{ inputs.error_on_loss }}" == "true" ];
           then
-            if [ "$deck_1" == "${{ inputs.deck_1 }}" ] && [ "$score_1" -lt "$score_2" ]; then echo "Failed too many matches"; exit 1; fi
-            if [ "$deck_2" == "${{ inputs.deck_1 }}" ] && [ "$score_2" -lt "$score_1" ]; then echo "Failed too many matches"; exit 1; fi
+            if [ "$deck_1" == "${{ inputs.deck_1 }}" ] && [ "$score_1" -lt "$score_2" ]; then echo "You just lost the game"; exit 1; fi
+            if [ "$deck_2" == "${{ inputs.deck_1 }}" ] && [ "$score_2" -lt "$score_1" ]; then echo "You just lost the game"; exit 1; fi
           fi
 
       - name: 'Upload full log'

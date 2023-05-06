@@ -90,3 +90,13 @@ jobs:
       deck_2: 'playtest/${{ matrix.deck_2 }}.dck'
       rounds: '${{ inputs.rounds }}'
       log_file: '${{ matrix.deck_2 }}.log'
+      error_on_loss: 'true'
+
+  error:
+    if: failure()
+    name: Check for losses
+    needs: [cache, sanitize, get_decks, playtest]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Return error on failure
+        run: exit 1
