@@ -22,14 +22,6 @@ jobs:
     name: 'Build cache'
     uses: ./.github/workflows/cache.yml
 
-  one:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
   decks:
     name: Get the updated decks
     runs-on: ubuntu-latest
@@ -55,8 +47,8 @@ jobs:
       matrix: ${{ fromJSON(needs.decks.outputs.list) }}
     uses: ./.github/workflows/playtest.yml
     with:
-      deck_1: '${{ inputs.deck_1 }}'
-      rounds: '${{ inputs.rounds }}'
+      deck_1: '${{ matrix.deck_1 }}'
+      rounds: '7'
       error_on_loss: 'true'
 
   error:
