@@ -180,7 +180,7 @@ jobs:
             echo "score_2=$score_1" >> $GITHUB_OUTPUT
           fi
 
-      - name: '${{ steps.results.outputs.deck_1 }}: ${{ steps.results.outputs.score_1 }}-${{ steps.results.outputs.score_2 }}, ${{ needs.sanitize.outputs.wins_required }} wins required'
+      - name: '${{ steps.results.outputs.deck_1 }} won ${{ steps.results.outputs.score_1 }} of ${{ needs.sanitize.outputs.rounds }}, ${{ needs.sanitize.outputs.wins_required }} wins required'
         run: |
           if [ "${{ steps.results.outputs.score_1 }}" -lt "${{ needs.sanitize.outputs.wins_required }}" ];
           then
