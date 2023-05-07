@@ -1,4 +1,4 @@
-name: '[Run simulation]'
+name: 'Run simulation'
 
 on:
   workflow_dispatch:
@@ -33,9 +33,6 @@ on:
         type: string
         required: true
         default: '7'
-      log_file:
-        description: Log filename
-        type: string
       error_on_loss:
         description: Throw error on match loss
         type: string
@@ -146,7 +143,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.log_file || 'forge.log' }}
+          name: '${{ needs.sanitize.outputs.deck_1 }}-${{ needs.sanitize.outputs.deck_2 }}-forge.log'
           path: ${{ env.HOME }}/.forge/forge.log
 
       - name: 'Get match results'

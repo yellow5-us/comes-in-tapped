@@ -1,0 +1,61 @@
+name: '[Run Playtests on PR]'
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.dck'
+    paths-ignore:
+      - 'playtest/**'
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  cache:
+    name: 'Build cache'
+    uses: ./.github/workflows/cache.yml
+
+  decks:
+    name: Get the updated decks
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.decks.outputs.list }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get deck list
+        id: decks
+        run: |
+          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.after }} ${{ github.event.before }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'          
+
+  playtest:
+    name: 'Playtest ${{ matrix.deck_1 }}'
+    needs: [cache, decks]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.decks.outputs.list) }}
+    uses: ./.github/workflows/playtest.yml
+    with:
+      deck_1: '${{ inputs.deck_1 }}'
+      rounds: '${{ inputs.rounds }}'
+      error_on_loss: 'true'
+
+  error:
+    if: failure()
+    name: Check for all losses
+    needs: [cache, decks, playtest]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Return error on failure
+        run: exit 1

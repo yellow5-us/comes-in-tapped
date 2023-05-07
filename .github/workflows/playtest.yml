@@ -24,14 +24,14 @@ on:
         type: string
         required: true
         default: '7'
+      error_on_loss:
+        description: Throw error on match loss
+        type: string
+        default: 'false'
 
 permissions:
   id-token: write
   contents: read
-
-env:
-  FORGE_SNAPSHOT_URL: 'https://downloads.cardforge.org/dailysnapshots/'
-  HOME: '/home/runner'
 
 jobs:
   cache:
@@ -61,11 +61,11 @@ jobs:
           if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
           echo "rounds=${rounds}" >> $GITHUB_OUTPUT
 
-  get_decks:
-    name: Get playtest deck info
+  decks:
+    name: Get the playtest decks
     runs-on: ubuntu-latest
     outputs:
-      list: ${{ steps.get_decks.outputs.list }}
+      list: ${{ steps.decks.outputs.list }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
@@ -73,29 +73,28 @@ jobs:
           fetch-depth: 0
 
       - name: Get deck list
-        id: get_decks
+        id: decks
         working-directory: playtest
         run: |
           echo 'list={"deck_2": ["'$(ls *.dck | sed -r 's/\.dck$//' | tr '\n' ' ' | sed -r 's/ $//' | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
 
   playtest:
     name: 'Playtest ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ matrix.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
-    needs: [cache, sanitize, get_decks]
+    needs: [cache, sanitize, decks]
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.get_decks.outputs.list) }}
+      matrix: ${{ fromJSON(needs.decks.outputs.list) }}
     uses: ./.github/workflows/simulation.yml
     with:
       deck_1: '${{ inputs.deck_1 }}'
       deck_2: 'playtest/${{ matrix.deck_2 }}.dck'
       rounds: '${{ inputs.rounds }}'
-      log_file: '${{ matrix.deck_2 }}.log'
-      error_on_loss: 'true'
+      error_on_loss: '${{ inputs.error_on_loss || 'false' }}'
 
   error:
     if: failure()
-    name: Check for losses
-    needs: [cache, sanitize, get_decks, playtest]
+    name: Check for playtest losses
+    needs: [cache, sanitize, decks, playtest]
     runs-on: ubuntu-latest
     steps:
       - name: Return error on failure
