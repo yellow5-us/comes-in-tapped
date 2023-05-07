@@ -39,12 +39,13 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v3
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Get deck list
         id: decks
         run: |
-          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.after }} ${{ github.event.before }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'
+          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.head_ref }} main -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'
 
   playtest:
     name: 'Playtest ${{ matrix.deck_1 }}'
