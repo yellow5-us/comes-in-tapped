@@ -92,7 +92,7 @@ jobs:
 
           wins_required="$(( ${{ inputs.wins_required }} + 0 ))"
           if [ "$wins_required" -lt 0 ] || [ "$wins_required" -gt "$rounds" ]; then echo "Wins required is $wins_required"; exit 1; fi
-          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+          echo "wins_required=${wins_required}" >> $GITHUB_OUTPUT
 
   sim:
     name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
@@ -180,7 +180,7 @@ jobs:
             echo "score_2=$score_1" >> $GITHUB_OUTPUT
           fi
 
-      - name: '${{ steps.results.outputs.deck_1 }}: ${{ steps.results.outputs.score_1 }}, ${{ steps.results.outputs.deck_2 }}: ${{ steps.results.outputs.score_2 }}'
+      - name: '${{ steps.results.outputs.deck_1 }}: ${{ steps.results.outputs.score_1 }}-${{ steps.results.outputs.score_2 }}, ${{ needs.sanitize.outputs.wins_required }} wins required'
         run: |
           if [ "${{ steps.results.outputs.score_1 }}" -lt "${{ needs.sanitize.outputs.wins_required }}" ];
           then

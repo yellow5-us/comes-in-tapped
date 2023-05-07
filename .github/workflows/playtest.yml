@@ -68,7 +68,7 @@ jobs:
 
           wins_required="$(( ${{ inputs.wins_required }} + 0 ))"
           if [ "$wins_required" -lt 0 ] || [ "$wins_required" -gt "$rounds" ]; then echo "Wins required is $wins_required"; exit 1; fi
-          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+          echo "wins_required=${wins_required}" >> $GITHUB_OUTPUT
 
   decks:
     name: Get the playtest decks
