@@ -7,12 +7,12 @@ on:
         description: Deck 1
         type: string
         required: true
-        default: 'prinny/forge/complete/absol.dck'
+        default: 'decks/prinny/forge/complete/absol.dck'
       deck_2:
         description: Deck 2
         type: string
         required: true
-        default: 'prinny/forge/complete/altaria.dck'
+        default: 'decks/prinny/forge/complete/altaria.dck'
       rounds:
         description: Rounds
         type: string

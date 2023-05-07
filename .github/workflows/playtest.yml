@@ -7,7 +7,7 @@ on:
         description: Deck
         type: string
         required: true
-        default: 'prinny/forge/complete/absol.dck'
+        default: 'decks/prinny/forge/complete/absol.dck'
       rounds:
         description: Rounds
         type: string
