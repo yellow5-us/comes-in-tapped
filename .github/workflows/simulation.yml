@@ -18,6 +18,10 @@ on:
         type: string
         required: true
         default: '7'
+      wins_required:
+        description: Wins required
+        type: string
+        default: '0'
   workflow_call:
     inputs:
       deck_1:
@@ -33,10 +37,11 @@ on:
         type: string
         required: true
         default: '7'
-      error_on_loss:
-        description: Throw error on match loss
+      wins_required:
+        description: Wins required
         type: string
-        default: 'false'
+        required: true
+        default: '0'
     outputs:
       results_deck_1:
         value: '${{ jobs.sim.outputs.results_deck_1 }}'
@@ -62,6 +67,7 @@ jobs:
       deck_1: ${{ steps.sanitize.outputs.deck_1 }}
       deck_2: ${{ steps.sanitize.outputs.deck_2 }}
       rounds: ${{ steps.sanitize.outputs.rounds }}
+      wins_required: ${{ steps.sanitize.outputs.wins_required }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -81,8 +87,12 @@ jobs:
           echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
 
           rounds="$(( ${{ inputs.rounds }} + 0 ))"
-          if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
+          if [ "$rounds" -lt 1 ]; then echo "Rounds is $rounds"; exit 1; fi
           echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+
+          wins_required="$(( ${{ inputs.wins_required }} + 0 ))"
+          if [ "$wins_required" -lt 0 ] || [ "$wins_required" -gt "$rounds" ]; then echo "Wins required is $wins_required"; exit 1; fi
+          echo "wins_required=${wins_required}" >> $GITHUB_OUTPUT
 
   sim:
     name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
@@ -157,21 +167,23 @@ jobs:
           deck_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\3/')
           score_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\4/')
 
-          echo "deck_1=$deck_1" >> $GITHUB_OUTPUT
-          echo "score_1=$score_1" >> $GITHUB_OUTPUT
-          echo "deck_2=$deck_2" >> $GITHUB_OUTPUT
-          echo "score_2=$score_2" >> $GITHUB_OUTPUT
-
-          if [ "${{ inputs.error_on_loss }}" == "true" ];
+          if [ "$deck_1" == "${{ needs.sanitize.outputs.deck_1 }}" ];
           then
-            if [ "$deck_1" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "$score_1" -lt "$score_2" ]; then echo "You just lost the game"; exit 1; fi
-            if [ "$deck_2" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "$score_2" -lt "$score_1" ]; then echo "You just lost the game"; exit 1; fi
+            echo "deck_1=$deck_1" >> $GITHUB_OUTPUT
+            echo "score_1=$score_1" >> $GITHUB_OUTPUT
+            echo "deck_2=$deck_2" >> $GITHUB_OUTPUT
+            echo "score_2=$score_2" >> $GITHUB_OUTPUT
+          else
+            echo "deck_1=$deck_2" >> $GITHUB_OUTPUT
+            echo "score_1=$score_2" >> $GITHUB_OUTPUT
+            echo "deck_2=$deck_1" >> $GITHUB_OUTPUT
+            echo "score_2=$score_1" >> $GITHUB_OUTPUT
           fi
 
-      - name: '${{ steps.results.outputs.deck_1 }}: ${{ steps.results.outputs.score_1 }}, ${{ steps.results.outputs.deck_2 }}: ${{ steps.results.outputs.score_2 }}'
+      - name: '${{ steps.results.outputs.deck_1 }} won ${{ steps.results.outputs.score_1 }} of ${{ needs.sanitize.outputs.rounds }}, ${{ needs.sanitize.outputs.wins_required }} wins required'
         run: |
-          if [ "${{ inputs.error_on_loss }}" == "true" ];
+          if [ "${{ steps.results.outputs.score_1 }}" -lt "${{ needs.sanitize.outputs.wins_required }}" ];
           then
-            if [ "${{ steps.results.outputs.deck_1 }}" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "${{ steps.results.outputs.store_1 }}" -lt "${{ steps.results.outputs.score_2 }}" ]; then echo "You just lost the game"; exit 1; fi
-            if [ "${{ steps.results.outputs.deck_2 }}" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "${{ steps.results.outputs.store_2 }}" -lt "${{ steps.results.outputs.store_1 }}" ]; then echo "You just lost the game"; exit 1; fi
+            echo "You just lost the game"
+            exit 1
           fi

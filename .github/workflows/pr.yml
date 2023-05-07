@@ -16,6 +16,10 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   cache:
     name: 'Build cache'
@@ -59,8 +63,8 @@ jobs:
     uses: ./.github/workflows/playtest.yml
     with:
       deck_1: '${{ matrix.file }}'
-      rounds: '7'
-      error_on_loss: 'true'
+      rounds: '${{ vars.ROUNDS }}'
+      wins_required: '${{ vars.WINS_REQUIRED }}'
 
   error:
     if: failure()
