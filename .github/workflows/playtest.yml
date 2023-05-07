@@ -27,7 +27,6 @@ on:
       error_on_loss:
         description: Throw error on match loss
         type: string
-        default: 'false'
 
 permissions:
   id-token: write
@@ -89,7 +88,7 @@ jobs:
       deck_1: '${{ inputs.deck_1 }}'
       deck_2: 'playtest/${{ matrix.deck_2 }}.dck'
       rounds: '${{ inputs.rounds }}'
-      error_on_loss: '${{ inputs.error_on_loss || 'false' }}'
+      error_on_loss: '${{ inputs.error_on_loss }}'
 
   error:
     if: failure()

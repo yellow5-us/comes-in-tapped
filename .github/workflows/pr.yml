@@ -6,8 +6,7 @@ on:
       - main
     paths:
       - '**.dck'
-    paths-ignore:
-      - 'playtest/**'
+      - '!playtest/**'
     types:
       - opened
       - reopened
