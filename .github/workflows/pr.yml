@@ -44,7 +44,7 @@ jobs:
       - name: Get deck list
         id: decks
         run: |
-          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.sha }} main -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'
+          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.after }} ${{ github.event.before }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'
 
   playtest:
     name: 'Playtest ${{ matrix.deck_1 }}'
