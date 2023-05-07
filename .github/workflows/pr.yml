@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '**.dck'
-      - '!playtest/**'
+      - 'decks/**.dck'
     types:
       - opened
       - reopened
@@ -31,12 +30,13 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v3
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Get deck list
         id: decks
         run: |
-          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.after }} ${{ github.event.before }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'          
+          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
 
   playtest:
     name: 'Playtest ${{ matrix.deck_1 }}'
@@ -46,8 +46,8 @@ jobs:
       matrix: ${{ fromJSON(needs.decks.outputs.list) }}
     uses: ./.github/workflows/playtest.yml
     with:
-      deck_1: '${{ inputs.deck_1 }}'
-      rounds: '${{ inputs.rounds }}'
+      deck_1: '${{ matrix.deck_1 }}'
+      rounds: '7'
       error_on_loss: 'true'
 
   error:
