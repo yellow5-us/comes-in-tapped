@@ -46,8 +46,9 @@ jobs:
             fi
           done
 
-          echo 'list={"decks":'$list'}' >> $GITHUB_OUTPUT
+          echo 'list='$list >> $GITHUB_OUTPUT
           echo "count=$(echo $list | jq length)" >> $GITHUB_OUTPUT
+          echo 'list='$list
 
   playtest:
     name: 'Playtest ${{ matrix.name }}'
