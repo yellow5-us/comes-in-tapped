@@ -26,27 +26,39 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       list: ${{ steps.decks.outputs.list }}
+      count: ${{ steps.decks.outputs.count }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Get deck list
         id: decks
         run: |
-          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
+          list='[]'
+          for file in $(git --no-pager diff --name-only ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }} -- | grep '^decks\/' | grep '\.dck$')
+          do
+            name=$(basename $file | sed -r 's/\.dck$//')
+            if [ ! -z "$name" ];
+            then
+              list=$(echo $list | jq -c '. += [{"file": "'$file'", "name": "'$name'"}]')
+            fi
+          done
+
+          echo "list=$list" >> $GITHUB_OUTPUT
+          echo "count=$(echo $list | jq length)"
 
   playtest:
-    name: 'Playtest ${{ matrix.deck_1 }}'
+    name: 'Playtest ${{ matrix.name }}'
+    if: ${{ needs.decks.outputs.count > 0 }}
     needs: [cache, decks]
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.decks.outputs.list) }}
     uses: ./.github/workflows/playtest.yml
     with:
-      deck_1: '${{ matrix.deck_1 }}'
+      deck_1: '${{ matrix.file }}'
       rounds: '7'
       error_on_loss: 'true'
 
