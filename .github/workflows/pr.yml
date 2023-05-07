@@ -46,16 +46,8 @@ jobs:
             fi
           done
 
-          echo 'list={"all": '$list'}' >> $GITHUB_OUTPUT
+          echo 'list={"include": '$list'}' >> $GITHUB_OUTPUT
           echo "count=$(echo $list | jq length)" >> $GITHUB_OUTPUT
-
-  debug:
-    name: 'Debug'
-    needs: [decks]
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Deck list'
-        run: echo '${{ needs.decks.outputs.list }}'
 
   playtest:
     name: 'Playtest ${{ matrix.name }}'
