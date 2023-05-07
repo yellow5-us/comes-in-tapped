@@ -18,6 +18,10 @@ on:
         type: string
         required: true
         default: '7'
+      wins_required:
+        description: Wins required
+        type: string
+        default: '0'
   workflow_call:
     inputs:
       deck_1:
@@ -33,10 +37,11 @@ on:
         type: string
         required: true
         default: '7'
-      error_on_loss:
-        description: Throw error on match loss
+      wins_required:
+        description: Wins required
         type: string
-        default: 'false'
+        required: true
+        default: '0'
     outputs:
       results_deck_1:
         value: '${{ jobs.sim.outputs.results_deck_1 }}'
@@ -81,7 +86,11 @@ jobs:
           echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
 
           rounds="$(( ${{ inputs.rounds }} + 0 ))"
-          if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
+          if [ "$rounds" -lt 1 ]; then echo "Rounds is $rounds"; exit 1; fi
+          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+
+          wins_required="$(( ${{ inputs.wins_required }} + 0 ))"
+          if [ "$wins_required" -lt 0 ] || [ "$wins_required" -gt "$rounds" ]; then echo "Wins required is $wins_required"; exit 1; fi
           echo "rounds=${rounds}" >> $GITHUB_OUTPUT
 
   sim:
@@ -162,16 +171,10 @@ jobs:
           echo "deck_2=$deck_2" >> $GITHUB_OUTPUT
           echo "score_2=$score_2" >> $GITHUB_OUTPUT
 
-          if [ "${{ inputs.error_on_loss }}" == "true" ];
-          then
-            if [ "$deck_1" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "$score_1" -lt "$score_2" ]; then echo "You just lost the game"; exit 1; fi
-            if [ "$deck_2" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "$score_2" -lt "$score_1" ]; then echo "You just lost the game"; exit 1; fi
-          fi
-
       - name: '${{ steps.results.outputs.deck_1 }}: ${{ steps.results.outputs.score_1 }}, ${{ steps.results.outputs.deck_2 }}: ${{ steps.results.outputs.score_2 }}'
         run: |
-          if [ "${{ inputs.error_on_loss }}" == "true" ];
+          if [ "${{ steps.results.outputs.score_1 }}" -lt "${{ needs.sanitize.outputs.wins_required }}" ];
           then
-            if [ "${{ steps.results.outputs.deck_1 }}" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "${{ steps.results.outputs.store_1 }}" -lt "${{ steps.results.outputs.score_2 }}" ]; then echo "You just lost the game"; exit 1; fi
-            if [ "${{ steps.results.outputs.deck_2 }}" == "${{ needs.sanitize.outputs.deck_1 }}" ] && [ "${{ steps.results.outputs.store_2 }}" -lt "${{ steps.results.outputs.store_1 }}" ]; then echo "You just lost the game"; exit 1; fi
+            echo "You just lost the game"
+            exit 1
           fi

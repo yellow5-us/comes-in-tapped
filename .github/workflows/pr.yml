@@ -59,8 +59,8 @@ jobs:
     uses: ./.github/workflows/playtest.yml
     with:
       deck_1: '${{ matrix.file }}'
-      rounds: '7'
-      error_on_loss: 'true'
+      rounds: '${{ vars.ROUNDS }}'
+      wins_required: '${{ vars.WINS_REQUIRED }}'
 
   error:
     if: failure()
