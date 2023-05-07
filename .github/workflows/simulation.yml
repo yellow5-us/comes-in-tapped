@@ -67,6 +67,7 @@ jobs:
       deck_1: ${{ steps.sanitize.outputs.deck_1 }}
       deck_2: ${{ steps.sanitize.outputs.deck_2 }}
       rounds: ${{ steps.sanitize.outputs.rounds }}
+      wins_required: ${{ steps.sanitize.outputs.wins_required }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
