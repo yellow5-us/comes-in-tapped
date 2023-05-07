@@ -167,10 +167,18 @@ jobs:
           deck_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\3/')
           score_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\4/')
 
-          echo "deck_1=$deck_1" >> $GITHUB_OUTPUT
-          echo "score_1=$score_1" >> $GITHUB_OUTPUT
-          echo "deck_2=$deck_2" >> $GITHUB_OUTPUT
-          echo "score_2=$score_2" >> $GITHUB_OUTPUT
+          if [ "$deck_1" == "${{ needs.sanitize.outputs.deck_1 }}" ];
+          then
+            echo "deck_1=$deck_1" >> $GITHUB_OUTPUT
+            echo "score_1=$score_1" >> $GITHUB_OUTPUT
+            echo "deck_2=$deck_2" >> $GITHUB_OUTPUT
+            echo "score_2=$score_2" >> $GITHUB_OUTPUT
+          else
+            echo "deck_1=$deck_2" >> $GITHUB_OUTPUT
+            echo "score_1=$score_2" >> $GITHUB_OUTPUT
+            echo "deck_2=$deck_1" >> $GITHUB_OUTPUT
+            echo "score_2=$score_1" >> $GITHUB_OUTPUT
+          fi
 
       - name: '${{ steps.results.outputs.deck_1 }}: ${{ steps.results.outputs.score_1 }}, ${{ steps.results.outputs.deck_2 }}: ${{ steps.results.outputs.score_2 }}'
         run: |

@@ -48,6 +48,7 @@ jobs:
     outputs:
       deck_1: ${{ steps.sanitize.outputs.deck_1 }}
       rounds: ${{ steps.sanitize.outputs.rounds }}
+      wins_required: ${{ steps.sanitize.outputs.wins_required }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
@@ -63,6 +64,10 @@ jobs:
 
           rounds="$(( ${{ inputs.rounds }} + 0 ))"
           if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
+          echo "rounds=${rounds}" >> $GITHUB_OUTPUT
+
+          wins_required="$(( ${{ inputs.wins_required }} + 0 ))"
+          if [ "$wins_required" -lt 0 ] || [ "$wins_required" -gt "$rounds" ]; then echo "Wins required is $wins_required"; exit 1; fi
           echo "rounds=${rounds}" >> $GITHUB_OUTPUT
 
   decks:
@@ -92,5 +97,5 @@ jobs:
     with:
       deck_1: '${{ inputs.deck_1 }}'
       deck_2: 'playtest/${{ matrix.deck_2 }}.dck'
-      rounds: '${{ inputs.rounds }}'
-      wins_required: '${{ inputs.wins_required }}'
+      rounds: '${{ needs.sanitize.outputs.rounds }}'
+      wins_required: '${{ needs.sanitize.outputs.wins_required }}'
