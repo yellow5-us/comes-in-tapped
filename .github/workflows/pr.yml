@@ -22,6 +22,14 @@ jobs:
     name: 'Build cache'
     uses: ./.github/workflows/cache.yml
 
+  one:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
   decks:
     name: Get the updated decks
     runs-on: ubuntu-latest
@@ -36,7 +44,7 @@ jobs:
       - name: Get deck list
         id: decks
         run: |
-          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.after }} ${{ github.event.before }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'          
+          echo 'list={"deck_1": ["'$(echo -ne $(git --no-pager diff --name-only ${{ github.event.after }} ${{ github.event.before }} -- | grep '\.dck') | sed -r 's/ /","/g')'"]}'
 
   playtest:
     name: 'Playtest ${{ matrix.deck_1 }}'
