@@ -1,9 +1,7 @@
-///mvid:452902 qty:1 name:Assassin's Trophy loc:Deck
-1 Assassin's Trophy
-///mvid:452983 qty:3 name:Chromatic Lantern loc:Deck
-3 Chromatic Lantern
-///mvid:555279 qty:3 name:Extract the Truth loc:Deck
-3 Extract the Truth
+///mvid:452902 qty:3 name:Assassin's Trophy loc:Deck
+3 Assassin's Trophy
+///mvid:473052 qty:3 name:Foulmire Knight // Profane Insight loc:Deck
+3 Foulmire Knight // Profane Insight
 ///mvid:423728 qty:4 name:Gifted Aetherborn loc:Deck
 4 Gifted Aetherborn
 ///mvid:439818 qty:3 name:Journey to Eternity // Atzal, Cave of Eternity loc:Deck
@@ -12,16 +10,16 @@
 4 Overgrown Tomb
 ///mvid:605112 qty:4 name:Phyrexian Obliterator loc:Deck
 4 Phyrexian Obliterator
-///mvid:452832 qty:3 name:Plaguecrafter loc:Deck
-3 Plaguecrafter
-///mvid:555355 qty:4 name:Prizefight loc:Deck
-4 Prizefight
+///mvid:452831 qty:4 name:Pilfering Imp loc:Deck
+4 Pilfering Imp
+///mvid:452832 qty:4 name:Plaguecrafter loc:Deck
+4 Plaguecrafter
 ///mvid:495100 qty:16 name:Swamp loc:Deck
 16 Swamp
+///mvid:574662 qty:4 name:Tail Swipe loc:Deck
+4 Tail Swipe
 ///mvid:507654 qty:4 name:Tergrid, God of Fright // Tergrid's Lantern loc:Deck
 4 Tergrid, God of Fright // Tergrid's Lantern
-///mvid:466874 qty:4 name:Vampire of the Dire Moon loc:Deck
-4 Vampire of the Dire Moon
 ///mvid:473072 qty:3 name:Wishclaw Talisman loc:Deck
 3 Wishclaw Talisman
 ///mvid:443136 qty:4 name:Woodland Cemetery loc:Deck
