@@ -1,23 +1,20 @@
 [metadata]
 Name=raticate
-
 [Main]
-4 Authority of the Consuls|KLD
-1 Dovescape|DIS
-2 Dragonskull Summit|M10
-4 Fabled Passage|ELD
-4 Forbidden Orchard|CHK
-4 Genesis Chamber|DST
-4 Godless Shrine|GPT
-4 Mercy Killing|SHM
-1 Mountain|ZNR
-4 Plains|ZNR
-4 Rakdos Charm|RTR
-4 Revenge of Ravens|ELD
-4 Slaughter Specialist|MID
-4 Swamp|ZNR
-4 Trespasser's Curse|AKH
-4 Tribute to Horobi|NEO
-4 Wishclaw Talisman|ELD
-
-[Sideboard]
+4 Authority of the Consuls|KLD|1
+1 Dovescape|DIS|1
+2 Dragonskull Summit|M10|1
+4 Fabled Passage|ELD|1
+4 Forbidden Orchard|CHK|1
+4 Genesis Chamber|DST|1
+4 Godless Shrine|GPT|1
+4 Mercy Killing|SHM|1
+1 Mountain|ZNR|1
+4 Plains|ZNR|1
+4 Rakdos Charm|RTR|1
+4 Revenge of Ravens|ELD|1
+4 Suture Priest|NPH|1
+4 Swamp|ZNR|1
+4 Trespasser's Curse|AKH|1
+4 Tribute to Horobi|NEO|1
+4 Wishclaw Talisman|ELD|1
