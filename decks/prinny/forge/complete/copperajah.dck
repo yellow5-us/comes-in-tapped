@@ -1,22 +1,18 @@
 [metadata]
 Name=copperajah
-
 [Main]
-2 Breeding Pool|DIS
-4 Double Vision|M21
-4 Expansion|GRN
-3 Fabled Passage|ELD
-1 Forest|ZNR
-8 Island|ZNR
-4 Mirrormade|ELD
-5 Mountain|ZNR
-4 Mythos of Illuna|IKO
-4 Protean Thaumaturge|THB
-4 Quasiduplicate|GRN
-4 Repudiate|RNA
-4 Riddleform|HOU
-4 Spark Double|WAR
-3 Steam Vents|GPT
-2 Stomping Ground|GPT
-
-[Sideboard]
+2 Breeding Pool|DIS|1
+4 Double Vision|M21|1
+4 Expansion // Explosion|GRN|1
+3 Fabled Passage|ELD|1
+8 Island|ZNR|1
+4 Ketria Triome|IKO|1
+4 Metamorphic Alteration|M19|1
+4 Mirrormade|ELD|1
+3 Mountain|ZNR|1
+4 Mythos of Illuna|IKO|1
+4 Quasiduplicate|GRN|1
+4 Repudiate // Replicate|RNA|1
+4 Riddleform|HOU|1
+4 Second Harvest|SOI|1
+4 Steam Vents|GPT|1

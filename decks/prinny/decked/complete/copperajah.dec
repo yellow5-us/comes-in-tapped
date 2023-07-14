@@ -6,27 +6,25 @@
 4 Expansion // Explosion
 ///mvid:473206 qty:3 name:Fabled Passage loc:Deck
 3 Fabled Passage
-///mvid:495102 qty:1 name:Forest loc:Deck
-1 Forest
 ///mvid:495099 qty:8 name:Island loc:Deck
 8 Island
+///mvid:479770 qty:4 name:Ketria Triome loc:Deck
+4 Ketria Triome
+///mvid:447196 qty:4 name:Metamorphic Alteration loc:Deck
+4 Metamorphic Alteration
 ///mvid:473017 qty:4 name:Mirrormade loc:Deck
 4 Mirrormade
-///mvid:495101 qty:5 name:Mountain loc:Deck
-5 Mountain
+///mvid:495101 qty:3 name:Mountain loc:Deck
+3 Mountain
 ///mvid:479578 qty:4 name:Mythos of Illuna loc:Deck
 4 Mythos of Illuna
-///mvid:476311 qty:4 name:Protean Thaumaturge loc:Deck
-4 Protean Thaumaturge
 ///mvid:452801 qty:4 name:Quasiduplicate loc:Deck
 4 Quasiduplicate
 ///mvid:457371 qty:4 name:Repudiate // Replicate loc:Deck
 4 Repudiate // Replicate
 ///mvid:430732 qty:4 name:Riddleform loc:Deck
 4 Riddleform
-///mvid:460995 qty:4 name:Spark Double loc:Deck
-4 Spark Double
-///mvid:96923 qty:3 name:Steam Vents loc:Deck
-3 Steam Vents
-///mvid:96896 qty:2 name:Stomping Ground loc:Deck
-2 Stomping Ground
+///mvid:409990 qty:4 name:Second Harvest loc:Deck
+4 Second Harvest
+///mvid:96923 qty:4 name:Steam Vents loc:Deck
+4 Steam Vents
