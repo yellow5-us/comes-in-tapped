@@ -1,9 +1,7 @@
 ///mvid:577507 qty:4 name:Aether Channeler loc:Deck
 4 Aether Channeler
-///mvid:398459 qty:4 name:Faerie Miscreant loc:Deck
-4 Faerie Miscreant
-///mvid:83699 qty:2 name:Followed Footsteps loc:Deck
-2 Followed Footsteps
+///mvid:464000 qty:4 name:Faerie Seer loc:Deck
+4 Faerie Seer
 ///mvid:495099 qty:22 name:Island loc:Deck
 22 Island
 ///mvid:447196 qty:4 name:Metamorphic Alteration loc:Deck
@@ -18,6 +16,8 @@
 4 Shore Up
 ///mvid:491711 qty:2 name:Silundi Vision // Silundi Isle loc:Deck
 2 Silundi Vision // Silundi Isle
+///mvid:366343 qty:2 name:Simic Manipulator loc:Deck
+2 Simic Manipulator
 ///mvid:439844 qty:2 name:The Immortal Sun loc:Deck
 2 The Immortal Sun
 ///mvid:577512 qty:4 name:Vesuvan Duplimancy loc:Deck
