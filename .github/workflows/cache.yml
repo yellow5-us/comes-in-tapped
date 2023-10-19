@@ -29,10 +29,11 @@ jobs:
         id: version
         if: steps.cache-forge.outputs.cache-hit != 'true'
         run: |
-          echo "name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-gui-desktop.+\.tar.bz2"' | sed -r 's/"//g')" >> $GITHUB_OUTPUT
+          echo "name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-desktop.+\.jar"' | sed -r 's/"//g')" >> $GITHUB_OUTPUT
 
       - name: 'Install Forge'
         if: steps.cache-forge.outputs.cache-hit != 'true'
         run: |
-          mkdir -p $HOME/forge && cd $HOME/forge
-          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${{ steps.version.outputs.name }} -o ./${{ steps.version.outputs.name }} && tar -xf ${{ steps.version.outputs.name }} && rm -f ${{ steps.version.outputs.name }}
+          echo "INSTALL_PATH=forge" > forge_latest.properties
+          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${{ steps.version.outputs.name }} -o ./${{ steps.version.outputs.name }}
+          java -jar ./${{ steps.version.outputs.name }} -options forge_latest.properties
