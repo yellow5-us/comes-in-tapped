@@ -127,6 +127,7 @@ jobs:
 
       - name: 'Install Forge'
         if: steps.cache-forge.outputs.cache-hit != 'true'
+        working-directory: ${{ env.HOME }}
         run: |
           echo "INSTALL_PATH=forge" > forge_latest.properties
           curl -s ${{ env.FORGE_SNAPSHOT_URL }}${{ steps.version.outputs.name }} -o ./${{ steps.version.outputs.name }}
