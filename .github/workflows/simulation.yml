@@ -123,12 +123,6 @@ jobs:
           curl -s ${{ env.FORGE_SNAPSHOT_URL }}${name} -o ./${name}
           java -jar ./${name} -options forge_latest.properties
 
-      - name: Forge jar file name
-        id: jar
-        working-directory: ${{ env.HOME }}/forge
-        run: |
-          echo "name=$(ls forge-gui-desktop-*.jar)" >> $GITHUB_OUTPUT
-
       - name: Symlink deck path
         run: |
           mkdir -p $HOME/.forge/decks
@@ -136,10 +130,12 @@ jobs:
 
       - name: Run simulation
         working-directory: ${{ env.HOME }}/forge
+        env:
+          DISPLAY: ':99'
         run: |
-          export DISPLAY=:99
+          jar_file=$(ls forge-gui-desktop-*.jar)
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-          java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${{ steps.jar.outputs.name }} sim -d "${{ inputs.deck_file_player }}" "${{ inputs.deck_file_opponent }}" -n ${{ steps.game.outputs.rounds }}
+          java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${jar_file} sim -d "${{ inputs.deck_file_player }}" "${{ inputs.deck_file_opponent }}" -n ${{ steps.game.outputs.rounds }}
 
       - name: Upload full log
         if: always()
