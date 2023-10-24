@@ -3,8 +3,8 @@ name: 'Run Playtests'
 on:
   workflow_dispatch:
     inputs:
-      deck_1:
-        description: Deck
+      deck_file_player:
+        description: Player deck file
         type: string
         required: true
         default: 'decks/prinny/forge/complete/absol.dck'
@@ -19,8 +19,8 @@ on:
         default: '0'
   workflow_call:
     inputs:
-      deck_1:
-        description: Deck
+      deck_file_player:
+        description: Player deck file
         type: string
         required: true
       rounds:
@@ -39,29 +39,24 @@ permissions:
 
 jobs:
   cache:
-    name: 'Build cache'
+    name: Build cache
     uses: ./.github/workflows/cache.yml
 
-  sanitize:
-    name: Sanitize
+  playtest_info:
+    name: Playtest info
     runs-on: ubuntu-latest
     outputs:
-      deck_1: ${{ steps.sanitize.outputs.deck_1 }}
-      rounds: ${{ steps.sanitize.outputs.rounds }}
-      wins_required: ${{ steps.sanitize.outputs.wins_required }}
+      rounds: ${{ steps.game.outputs.rounds }}
+      wins_required: ${{ steps.game.outputs.wins_required }}
+      deck_name_player: ${{ steps.player.outputs.deck_name }}
+      deck_name_opponent_list: ${{ steps.opponent.outputs.deck_names }}
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Sanitize inputs
-        id: sanitize
+      - name: Game info
+        id: game
         run: |
-          if [ ! -f "${{ inputs.deck_1 }}" ]; then echo "${{ inputs.deck_1 }} not found"; exit 1; fi
-          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
-          echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
-
           rounds="$(( ${{ inputs.rounds }} + 0 ))"
           if [[ "$rounds" -lt 1 ]]; then echo "Rounds is $rounds"; exit 1; fi
           echo "rounds=${rounds}" >> $GITHUB_OUTPUT
@@ -70,32 +65,30 @@ jobs:
           if [ "$wins_required" -lt 0 ] || [ "$wins_required" -gt "$rounds" ]; then echo "Wins required is $wins_required"; exit 1; fi
           echo "wins_required=${wins_required}" >> $GITHUB_OUTPUT
 
-  decks:
-    name: Get the playtest decks
-    runs-on: ubuntu-latest
-    outputs:
-      list: ${{ steps.decks.outputs.list }}
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Player deck info
+        id: player
+        run: |
+          if [ ! -f "${{ inputs.deck_file_player }}" ]; then echo "${{ inputs.deck_file_player }} not found"; exit 1; fi
+          deck_name=$(echo '${{ inputs.deck_file_player }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
+          echo "deck_name=${deck_name}" >> $GITHUB_OUTPUT
 
-      - name: Get deck list
-        id: decks
+      - name: Opponent deck info
+        id: opponent
         working-directory: playtest
         run: |
-          echo 'list={"deck_2": ["'$(ls *.dck | sed -r 's/\.dck$//' | tr '\n' ' ' | sed -r 's/ $//' | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
+          echo 'deck_names={"deck_name_opponent": ["'$(ls *.dck | sed -r 's/\.dck$//' | tr '\n' ' ' | sed -r 's/ $//' | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
 
   playtest:
-    name: 'Playtest ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ matrix.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
-    needs: [cache, sanitize, decks]
+    name: ${{ needs.playtest_info.outputs.deck_name_player }} vs. ${{ matrix.deck_name_opponent }} (${{ needs.playtest_info.outputs.rounds }}x)
+    needs: [cache, playtest_info]
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.decks.outputs.list) }}
+      matrix: ${{ fromJSON(needs.playtest_info.outputs.deck_name_opponent_list) }}
     uses: ./.github/workflows/simulation.yml
     with:
-      deck_1: '${{ inputs.deck_1 }}'
-      deck_2: 'playtest/${{ matrix.deck_2 }}.dck'
-      rounds: '${{ needs.sanitize.outputs.rounds }}'
-      wins_required: '${{ needs.sanitize.outputs.wins_required }}'
+      deck_name_player: ${{ needs.playtest_info.outputs.deck_name_player }}
+      deck_file_player: ${{ inputs.deck_file_player }}
+      deck_name_opponent: ${{ matrix.deck_name_opponent }}
+      deck_file_opponent: playtest/${{ matrix.deck_name_opponent }}.dck
+      rounds: ${{ needs.playtest_info.outputs.rounds }}
+      wins_required: ${{ needs.playtest_info.outputs.wins_required }}
