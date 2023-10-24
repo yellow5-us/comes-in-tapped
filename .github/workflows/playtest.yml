@@ -79,7 +79,7 @@ jobs:
           echo 'deck_names={"deck_name_opponent": ["'$(ls *.dck | sed -r 's/\.dck$//' | tr '\n' ' ' | sed -r 's/ $//' | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
 
   playtest:
-    name: 'Playtest ${{ needs.playtest_info.outputs.deck_name_player }} vs. ${{ matrix.deck_opponent }} (${{ needs.game.outputs.rounds }}x)'
+    name: 'Playtest ${{ needs.playtest_info.outputs.deck_name_player }} vs. ${{ matrix.deck_name_opponent }} (${{ needs.playtest_info.outputs.rounds }}x)'
     needs: [cache, playtest_info]
     strategy:
       fail-fast: false
