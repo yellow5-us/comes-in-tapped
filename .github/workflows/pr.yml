@@ -65,12 +65,3 @@ jobs:
       deck_file_player: ${{ matrix.file }}
       rounds: ${{ vars.ROUNDS }}
       wins_required: ${{ vars.WINS_REQUIRED }}
-
-  error:
-    if: ${{ !cancelled() && failure() }}
-    name: Check for all losses
-    needs: [cache, decks, playtest]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Return error on failure
-        run: exit 1
