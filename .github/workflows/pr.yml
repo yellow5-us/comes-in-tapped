@@ -22,18 +22,18 @@ concurrency:
 
 jobs:
   cache:
-    name: 'Build cache'
+    name: Build cache
     uses: ./.github/workflows/cache.yml
 
   decks:
-    name: Get the updated decks
+    name: Get updated decks
     runs-on: ubuntu-latest
     outputs:
       list: ${{ steps.decks.outputs.list }}
       count: ${{ steps.decks.outputs.count }}
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -54,7 +54,7 @@ jobs:
           echo "count=$(echo $list | jq length)" >> $GITHUB_OUTPUT
 
   playtest:
-    name: 'Playtest ${{ matrix.name }}'
+    name: Playtest ${{ matrix.name }}
     if: ${{ needs.decks.outputs.count > 0 }}
     needs: [cache, decks]
     strategy:
@@ -62,12 +62,12 @@ jobs:
       matrix: ${{ fromJSON(needs.decks.outputs.list) }}
     uses: ./.github/workflows/playtest.yml
     with:
-      deck_1: '${{ matrix.file }}'
-      rounds: '${{ vars.ROUNDS }}'
-      wins_required: '${{ vars.WINS_REQUIRED }}'
+      deck_1: ${{ matrix.file }}
+      rounds: ${{ vars.ROUNDS }}
+      wins_required: ${{ vars.WINS_REQUIRED }}
 
   error:
-    if: failure()
+    if: ${{ !cancelled() && failure() }}
     name: Check for all losses
     needs: [cache, decks, playtest]
     runs-on: ubuntu-latest

@@ -39,11 +39,11 @@ permissions:
 
 jobs:
   cache:
-    name: 'Build cache'
+    name: Build cache
     uses: ./.github/workflows/cache.yml
 
   playtest_info:
-    name: Get the playtest info
+    name: Playtest info
     runs-on: ubuntu-latest
     outputs:
       rounds: ${{ steps.game.outputs.rounds }}
@@ -51,7 +51,7 @@ jobs:
       deck_name_player: ${{ steps.player.outputs.deck_name }}
       deck_name_opponent_list: ${{ steps.opponent.outputs.deck_names }}
     steps:
-      - name: 'Checkout'
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Game info
@@ -79,16 +79,16 @@ jobs:
           echo 'deck_names={"deck_name_opponent": ["'$(ls *.dck | sed -r 's/\.dck$//' | tr '\n' ' ' | sed -r 's/ $//' | sed -r 's/ /","/g')'"]}' >> $GITHUB_OUTPUT
 
   playtest:
-    name: 'Playtest ${{ needs.playtest_info.outputs.deck_name_player }} vs. ${{ matrix.deck_name_opponent }} (${{ needs.playtest_info.outputs.rounds }}x)'
+    name: ${{ needs.playtest_info.outputs.deck_name_player }} vs. ${{ matrix.deck_name_opponent }} (${{ needs.playtest_info.outputs.rounds }}x)
     needs: [cache, playtest_info]
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.playtest_info.outputs.deck_name_opponent_list) }}
     uses: ./.github/workflows/simulation.yml
     with:
-      deck_name_player: '${{ needs.playtest_info.outputs.deck_name_player }}'
-      deck_file_player: '${{ inputs.deck_file_player }}'
-      deck_name_opponent: '${{ matrix.deck_name_opponent }}'
-      deck_file_opponent: 'playtest/${{ matrix.deck_name_opponent }}.dck'
-      rounds: '${{ needs.playtest_info.outputs.rounds }}'
-      wins_required: '${{ needs.playtest_info.outputs.wins_required }}'
+      deck_name_player: ${{ needs.playtest_info.outputs.deck_name_player }}
+      deck_file_player: ${{ inputs.deck_file_player }}
+      deck_name_opponent: ${{ matrix.deck_name_opponent }}
+      deck_file_opponent: playtest/${{ matrix.deck_name_opponent }}.dck
+      rounds: ${{ needs.playtest_info.outputs.rounds }}
+      wins_required: ${{ needs.playtest_info.outputs.wins_required }}

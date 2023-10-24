@@ -13,10 +13,10 @@ env:
 
 jobs:
   cache:
-    name: 'Forge cache check'
+    name: Build cache
     runs-on: ubuntu-latest
     steps:
-      - name: 'Cache setup'
+      - name: Cache setup
         id: cache-forge
         uses: actions/cache@v3
         with:
@@ -25,16 +25,11 @@ jobs:
           key: forge
           restore-keys: forge
 
-      - name: 'Get download info'
-        id: version
-        if: steps.cache-forge.outputs.cache-hit != 'true'
-        run: |
-          echo "name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-desktop.+\.jar"' | sed -r 's/"//g')" >> $GITHUB_OUTPUT
-
-      - name: 'Install Forge'
+      - name: Forge installation
         if: steps.cache-forge.outputs.cache-hit != 'true'
         working-directory: ${{ env.HOME }}
-        run: |
+       run: |
+          name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-desktop.+\.jar"' | sed -r 's/"//g')
           echo "INSTALL_PATH=forge" > forge_latest.properties
-          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${{ steps.version.outputs.name }} -o ./${{ steps.version.outputs.name }}
-          java -jar ./${{ steps.version.outputs.name }} -options forge_latest.properties
+          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${name} -o ./${name}
+          java -jar ./${name} -options forge_latest.properties
