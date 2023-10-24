@@ -17,7 +17,7 @@ on:
         description: Opponent deck name
         type: string
         required: true
-        default: 'altaria.dck'
+        default: 'altaria'
       deck_file_opponent:
         description: Opponent deck file
         type: string
