@@ -28,7 +28,7 @@ jobs:
       - name: Forge installation
         if: steps.cache-forge.outputs.cache-hit != 'true'
         working-directory: ${{ env.HOME }}
-       run: |
+        run: |
           name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-desktop.+\.jar"' | sed -r 's/"//g')
           echo "INSTALL_PATH=forge" > forge_latest.properties
           curl -s ${{ env.FORGE_SNAPSHOT_URL }}${name} -o ./${name}
