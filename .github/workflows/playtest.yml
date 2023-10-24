@@ -90,5 +90,5 @@ jobs:
       deck_file_player: '${{ inputs.deck_file_player }}'
       deck_name_opponent: '${{ matrix.deck_name_opponent }}'
       deck_file_opponent: 'playtest/${{ matrix.deck_name_opponent }}.dck'
-      rounds: '${{ steps.playtest_info.outputs.rounds }}'
-      wins_required: '${{ steps.playtest_info.outputs.wins_required }}'
+      rounds: '${{ needs.playtest_info.outputs.rounds }}'
+      wins_required: '${{ needs.playtest_info.outputs.wins_required }}'
