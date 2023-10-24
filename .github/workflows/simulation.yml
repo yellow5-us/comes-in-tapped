@@ -3,13 +3,23 @@ name: 'Run simulation'
 on:
   workflow_dispatch:
     inputs:
-      deck_1:
-        description: Deck 1
+      deck_name_player:
+        description: Player deck name
+        type: string
+        required: true
+        default: 'absol'
+      deck_file_player:
+        description: Player deck file
         type: string
         required: true
         default: 'decks/prinny/forge/complete/absol.dck'
-      deck_2:
-        description: Deck 2
+      deck_name_opponent:
+        description: Opponent deck name
+        type: string
+        required: true
+        default: 'altaria.dck'
+      deck_file_opponent:
+        description: Opponent deck file
         type: string
         required: true
         default: 'decks/prinny/forge/complete/altaria.dck'
@@ -24,12 +34,20 @@ on:
         default: '0'
   workflow_call:
     inputs:
-      deck_1:
-        description: Deck 1
+      deck_name_player:
+        description: Player deck name
         type: string
         required: true
-      deck_2:
-        description: Deck 2
+      deck_file_player:
+        description: Player deck file
+        type: string
+        required: true
+      deck_name_opponent:
+        description: Opponent deck name
+        type: string
+        required: true
+      deck_file_opponent:
+        description: Opponent deck file
         type: string
         required: true
       rounds:
@@ -43,14 +61,14 @@ on:
         required: true
         default: '0'
     outputs:
-      results_deck_1:
-        value: '${{ jobs.sim.outputs.results_deck_1 }}'
-      results_score_1:
-        value: '${{ jobs.sim.outputs.results_score_1 }}'
-      results_deck_2:
-        value: '${{ jobs.sim.outputs.results_deck_2 }}'
-      results_score_2:
-        value: '${{ jobs.sim.outputs.results_score_2 }}'
+      deck_name_player:
+        value: '${{ jobs.sim.outputs.deck_name_player }}'
+      score_player:
+        value: '${{ jobs.sim.outputs.score_player }}'
+      deck_name_opponent:
+        value: '${{ jobs.sim.outputs.deck_name_opponent }}'
+      score_opponent:
+        value: '${{ jobs.sim.outputs.score_opponent }}'
 
 permissions:
   id-token: write
@@ -61,13 +79,8 @@ env:
   HOME: '/home/runner'
 
 jobs:
-  sanitize:
-    name: Sanitize
-    outputs:
-      deck_1: ${{ steps.sanitize.outputs.deck_1 }}
-      deck_2: ${{ steps.sanitize.outputs.deck_2 }}
-      rounds: ${{ steps.sanitize.outputs.rounds }}
-      wins_required: ${{ steps.sanitize.outputs.wins_required }}
+  sim:
+    name: 'Simulate ${{ inputs.deck_name_player }} vs. ${{ inputs.deck_name_opponent }} (${{ inputs.rounds }}x)'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -75,17 +88,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Sanitize inputs
-        id: sanitize
+      - name: Game info
+        id: game
         run: |
-          if [ ! -f "${{ inputs.deck_1 }}" ]; then echo "${{ inputs.deck_1 }} not found"; exit 1; fi
-          deck_1=$(echo '${{ inputs.deck_1 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
-          echo "deck_1=${deck_1}" >> $GITHUB_OUTPUT
-
-          if [ ! -f "${{ inputs.deck_2 }}" ]; then echo "${{ inputs.deck_2 }} not found"; exit 1; fi
-          deck_2=$(echo '${{ inputs.deck_2 }}' | sed -r 's/^.+\/([^\/]+)\.dck$/\1/')
-          echo "deck_2=${deck_2}" >> $GITHUB_OUTPUT
-
           rounds="$(( ${{ inputs.rounds }} + 0 ))"
           if [ "$rounds" -lt 1 ]; then echo "Rounds is $rounds"; exit 1; fi
           echo "rounds=${rounds}" >> $GITHUB_OUTPUT
@@ -94,21 +99,13 @@ jobs:
           if [ "$wins_required" -lt 0 ] || [ "$wins_required" -gt "$rounds" ]; then echo "Wins required is $wins_required"; exit 1; fi
           echo "wins_required=${wins_required}" >> $GITHUB_OUTPUT
 
-  sim:
-    name: 'Simulate ${{ needs.sanitize.outputs.deck_1 }} vs. ${{ needs.sanitize.outputs.deck_2 }} (${{ needs.sanitize.outputs.rounds }}x)'
-    needs: [sanitize]
-    outputs:
-      results_deck_1: ${{ steps.results.outputs.deck_1 }}
-      results_score_1: ${{ steps.results.outputs.score_1 }}
-      results_deck_2: ${{ steps.results.outputs.deck_2 }}
-      results_score_2: ${{ steps.results.outputs.score_2 }}
+      - name: Get player deck file
+        run: |
+          if [ ! -f "${{ inputs.deck_file_player }}" ]; then echo "${{ inputs.deck_file_player }} not found"; exit 1; fi
 
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Get opponent deck file
+        run: |
+          if [ ! -f "${{ inputs.deck_file_opponent }}" ]; then echo "${{ inputs.deck_file_opponent }} not found"; exit 1; fi
 
       - name: 'Cache setup'
         id: cache-forge
@@ -149,13 +146,13 @@ jobs:
         run: |
           export DISPLAY=:99
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-          java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${{ steps.jar.outputs.name }} sim -d "${{ inputs.deck_1 }}" "${{ inputs.deck_2 }}" -n ${{ needs.sanitize.outputs.rounds }}
+          java -Xmx4096m -Dfile.encoding=UTF-8 -jar ${{ steps.jar.outputs.name }} sim -d "${{ inputs.deck_file_player }}" "${{ inputs.deck_file_opponent }}" -n ${{ steps.sanitize.outputs.rounds }}
 
       - name: 'Upload full log'
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: '${{ needs.sanitize.outputs.deck_1 }}-${{ needs.sanitize.outputs.deck_2 }}-forge.log'
+          name: '${{ inputs.deck_name_player }}-${{ inputs.deck_name_opponent }}-forge.log'
           path: ${{ env.HOME }}/.forge/forge.log
 
       - name: 'Get match results'
@@ -169,22 +166,22 @@ jobs:
           deck_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\3/')
           score_2=$(echo $line | sed -r 's/^[^-]+-([^:]+): ([0-9]+) [^-]+-([^:]+): ([0-9]+) *$/\4/')
 
-          if [ "$deck_1" == "${{ needs.sanitize.outputs.deck_1 }}" ];
+          if [ "$deck_1" == "${{ inputs.deck_name_player }}" ];
           then
-            echo "deck_1=$deck_1" >> $GITHUB_OUTPUT
-            echo "score_1=$score_1" >> $GITHUB_OUTPUT
-            echo "deck_2=$deck_2" >> $GITHUB_OUTPUT
-            echo "score_2=$score_2" >> $GITHUB_OUTPUT
+            echo "deck_player=$deck_1" >> $GITHUB_OUTPUT
+            echo "score_player=$score_1" >> $GITHUB_OUTPUT
+            echo "deck_opponent=$deck_2" >> $GITHUB_OUTPUT
+            echo "score_opponent=$score_2" >> $GITHUB_OUTPUT
           else
-            echo "deck_1=$deck_2" >> $GITHUB_OUTPUT
-            echo "score_1=$score_2" >> $GITHUB_OUTPUT
-            echo "deck_2=$deck_1" >> $GITHUB_OUTPUT
-            echo "score_2=$score_1" >> $GITHUB_OUTPUT
+            echo "deck_player=$deck_2" >> $GITHUB_OUTPUT
+            echo "score_player=$score_2" >> $GITHUB_OUTPUT
+            echo "deck_opponent=$deck_1" >> $GITHUB_OUTPUT
+            echo "score_opponent=$score_1" >> $GITHUB_OUTPUT
           fi
 
-      - name: '${{ steps.results.outputs.deck_1 }} won ${{ steps.results.outputs.score_1 }} of ${{ needs.sanitize.outputs.rounds }} (Required wins: ${{ needs.sanitize.outputs.wins_required }})'
+      - name: '${{ steps.results.outputs.deck_player }} won ${{ steps.results.outputs.score_player }} of ${{ steps.sanitize.outputs.rounds }} (Required wins: ${{ steps.sanitize.outputs.wins_required }})'
         run: |
-          if [ "${{ steps.results.outputs.score_1 }}" -lt "${{ needs.sanitize.outputs.wins_required }}" ];
+          if [ "${{ steps.results.outputs.score_player }}" -lt "${{ steps.sanitize.outputs.wins_required }}" ];
           then
             echo "You just lost the game"
             exit 1
