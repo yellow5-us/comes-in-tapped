@@ -62,7 +62,7 @@ jobs:
       matrix: ${{ fromJSON(needs.decks.outputs.list) }}
     uses: ./.github/workflows/playtest.yml
     with:
-      deck_1: ${{ matrix.file }}
+      deck_file_player: ${{ matrix.file }}
       rounds: ${{ vars.ROUNDS }}
       wins_required: ${{ vars.WINS_REQUIRED }}
 
