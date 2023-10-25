@@ -1,3 +1,7 @@
+///mvid:373661 qty:1 name:Abhorrent Overlord loc:Deck
+1 Abhorrent Overlord
+///mvid:189638 qty:2 name:Akoum Refuge loc:Deck
+2 Akoum Refuge
 ///mvid:152648 qty:3 name:Bitterblossom loc:Deck
 3 Bitterblossom
 ///mvid:97102 qty:4 name:Blood Crypt loc:Deck
@@ -6,18 +10,16 @@
 3 Corrupted Conviction
 ///mvid:544732 qty:1 name:Dreadfeast Demon loc:Deck
 1 Dreadfeast Demon
-///mvid:610523 qty:2 name:Etali, Primal Conqueror // Etali, Primal Sickness loc:Deck
-2 Etali, Primal Conqueror // Etali, Primal Sickness
+///mvid:610523 qty:1 name:Etali, Primal Conqueror // Etali, Primal Sickness loc:Deck
+1 Etali, Primal Conqueror // Etali, Primal Sickness
 ///mvid:473206 qty:4 name:Fabled Passage loc:Deck
 4 Fabled Passage
-///mvid:442982 qty:3 name:Fungal Infection loc:Deck
-3 Fungal Infection
-///mvid:461019 qty:1 name:God-Eternal Bontu loc:Deck
-1 God-Eternal Bontu
-///mvid:423752 qty:2 name:Indomitable Creativity loc:Deck
-2 Indomitable Creativity
-///mvid:552119 qty:1 name:Junji, the Midnight Sky loc:Deck
-1 Junji, the Midnight Sky
+///mvid:442982 qty:4 name:Fungal Infection loc:Deck
+4 Fungal Infection
+///mvid:5136 qty:2 name:Grave Pact loc:Deck
+2 Grave Pact
+///mvid:423752 qty:4 name:Indomitable Creativity loc:Deck
+4 Indomitable Creativity
 ///mvid:366412 qty:1 name:Lord of the Void loc:Deck
 1 Lord of the Void
 ///mvid:479645 qty:3 name:Lukka, Coppercoat Outcast loc:Deck
@@ -26,25 +28,19 @@
 1 Massacre Wurm
 ///mvid:495101 qty:5 name:Mountain loc:Deck
 5 Mountain
-///mvid:629604 qty:3 name:Rat Out loc:Deck
-3 Rat Out
+///mvid:383330 qty:1 name:Ob Nixilis, Unshackled loc:Deck
+1 Ob Nixilis, Unshackled
+///mvid:629604 qty:4 name:Rat Out loc:Deck
+4 Rat Out
 ///mvid:366285 qty:1 name:Sepulchral Primordial loc:Deck
 1 Sepulchral Primordial
-///mvid:607162 qty:1 name:Sheoldred // The True Scriptures loc:Deck
-1 Sheoldred // The True Scriptures
 ///mvid:495100 qty:5 name:Swamp loc:Deck
 5 Swamp
-///mvid:398612 qty:2 name:Tainted Remedy loc:Deck
-2 Tainted Remedy
 ///mvid:378536 qty:4 name:Temple of Malice loc:Deck
 4 Temple of Malice
-///mvid:507654 qty:1 name:Tergrid, God of Fright // Tergrid's Lantern loc:Deck
-1 Tergrid, God of Fright // Tergrid's Lantern
-///mvid:540984 qty:2 name:Toxrill, the Corrosive loc:Deck
-2 Toxrill, the Corrosive
+///mvid:540984 qty:1 name:Toxrill, the Corrosive loc:Deck
+1 Toxrill, the Corrosive
 ///mvid:488269 qty:4 name:Transmogrify loc:Deck
 4 Transmogrify
-///mvid:270372 qty:1 name:Utvara Hellkite loc:Deck
-1 Utvara Hellkite
-///mvid:410049 qty:2 name:Westvale Abbey // Ormendahl, Profane Prince loc:Deck
-2 Westvale Abbey // Ormendahl, Profane Prince
+///mvid:466876 qty:1 name:Vilis, Broker of Blood loc:Deck
+1 Vilis, Broker of Blood
