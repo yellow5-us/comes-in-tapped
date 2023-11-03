@@ -20,13 +20,15 @@
 4 Noxious Gearhulk
 ///mvid:453003 qty:4 name:Overgrown Tomb loc:Deck
 4 Overgrown Tomb
-///mvid:447328 qty:4 name:Pelakka Wurm loc:Deck
-4 Pelakka Wurm
+///mvid:447328 qty:3 name:Pelakka Wurm loc:Deck
+3 Pelakka Wurm
+///mvid:516920 qty:3 name:Pestilent Cauldron // Restorative Burst loc:Deck
+3 Pestilent Cauldron // Restorative Burst
+///mvid:383361 qty:1 name:Resolute Archangel loc:Deck
+1 Resolute Archangel
 ///mvid:495100 qty:4 name:Swamp loc:Deck
 4 Swamp
 ///mvid:453008 qty:4 name:Temple Garden loc:Deck
 4 Temple Garden
 ///mvid:435369 qty:4 name:Verdant Sun's Avatar loc:Deck
 4 Verdant Sun's Avatar
-///mvid:488261 qty:3 name:Vito, Thorn of the Dusk Rose loc:Deck
-3 Vito, Thorn of the Dusk Rose
