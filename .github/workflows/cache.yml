@@ -29,7 +29,11 @@ jobs:
         if: steps.cache-forge.outputs.cache-hit != 'true'
         working-directory: ${{ env.HOME }}
         run: |
-          name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-desktop.+\.jar"' | sed -r 's/"//g')
-          echo "INSTALL_PATH=forge" > forge_latest.properties
-          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${name} -o ./${name}
-          java -jar ./${name} -options forge_latest.properties
+          file_installer=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-gui-desktop.+\.bz2"' | sed -r 's/"//g')
+          mkdir -p ./forge_latest
+          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${file_installer} -o ./forge_latest/${file_installer}
+          bzip2 -d ./forge_latest/${file_installer}
+          file_tar=$(ls ./forge_latest)
+          tar -xf ./forge_latest/${file_tar} -C ./forge_latest && rm ./forge_latest/${file_tar}
+          mv ./forge_latest ./forge
+          chmod +x ./forge/*.sh
