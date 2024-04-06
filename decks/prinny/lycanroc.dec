@@ -4,8 +4,6 @@
 2 Barren Moor
 ///mvid:426748 qty:4 name:Censor loc:Deck
 4 Censor
-///mvid:426751 qty:4 name:Curator of Mysteries loc:Deck
-4 Curator of Mysteries
 ///mvid:191067 qty:2 name:Drowned Catacomb loc:Deck
 2 Drowned Catacomb
 ///mvid:435414 qty:2 name:Drowned Catacomb loc:Deck
@@ -14,6 +12,8 @@
 4 Faith of the Devoted
 ///mvid:426945 qty:4 name:Fetid Pools loc:Deck
 4 Fetid Pools
+///mvid:417789 qty:4 name:Ghirapur Orrery loc:Deck
+4 Ghirapur Orrery
 ///mvid:488249 qty:4 name:Ghostly Pilferer loc:Deck
 4 Ghostly Pilferer
 ///mvid:495099 qty:6 name:Island loc:Deck
@@ -24,8 +24,8 @@
 2 Lonely Sandbar
 ///mvid:417665 qty:4 name:Midnight Oil loc:Deck
 4 Midnight Oil
-///mvid:649726 qty:4 name:Proft's Eidetic Memory loc:Deck
-4 Proft's Eidetic Memory
+///mvid:414396 qty:4 name:Olivia's Dragoon loc:Deck
+4 Olivia's Dragoon
 ///mvid:426807 qty:4 name:Ruthless Sniper loc:Deck
 4 Ruthless Sniper
 ///mvid:495100 qty:6 name:Swamp loc:Deck
