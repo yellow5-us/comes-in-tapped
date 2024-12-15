@@ -12,7 +12,7 @@ on:
         description: Player deck file
         type: string
         required: true
-        default: 'decks/prinny/forge/complete/absol.dck'
+        default: 'decks/prinny/absol.dck'
       deck_name_opponent:
         description: Opponent deck name
         type: string
@@ -22,7 +22,7 @@ on:
         description: Opponent deck file
         type: string
         required: true
-        default: 'decks/prinny/forge/complete/altaria.dck'
+        default: 'decks/prinny/altaria.dck'
       rounds:
         description: Rounds
         type: string
