@@ -7,31 +7,51 @@
 # `d2f` will convert a decked xxxx.dec file to a forge xxxx.converted.dck file
 
 function fu {
-  directory=$(echo $1 | sed -r 's/\/$//')
-  if [ ! -d "$directory" ]; then echo "Usage $0 directory_name"; return 1; fi
-
   url=https://downloads.cardforge.org/dailysnapshots/
-  file=$(curl -s $url | grep -oE '"forge-gui-desktop.+\.tar.bz2"' | sed -r 's/"//g')
 
-  rm -rf $directory/forge_latest
-  mkdir -p $directory/forge_latest
-  cd $directory/forge_latest
+  is_installer="true"
+  file_regex='forge-installer-.+\.jar'
+  file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g')
 
-  echo "Downloading from ${url}${file}"
-  curl -s ${url}${file} -o ./${file} && tar -xf ${file} && rm -f ${file}
-  file_count=$(ls -l * | wc -l)
-
-  cd -
-  if [ "$file_count" = 1 ];
+  if [ -z "$file_installer" ];
   then
-    rm -rf $directory/forge_latest
-    return
+    is_installer="false"
+    file_regex='forge-gui-desktop.+\.bz2'
+    file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g')
   fi
 
-  rm -rf $directory/forge
-  mv $directory/forge_latest $directory/forge
+  if [ -z "$file_installer" ]; then echo "Forge installer not found at $url"; return 1; fi
 
-  return 0
+  if [ -f "./forge/version" ] && [ "$file_installer" = "$(cat ./forge/version)" ]; then echo "Forge is up to date ($file_installer)"; return 0; fi
+
+  rm -rf ./forge_latest
+  mkdir -p ./forge_latest
+
+  echo "Downloading ${url}${file_installer}"
+  curl -s ${url}${file_installer} -o ./forge_latest/${file_installer}
+
+  if [ ! -f "./forge_latest/${file_installer}" ]; then echo "Download failed"; rm -rf ./forge_latest; return 1; fi
+
+  rm -rf ./forge
+  if [ "$is_installer" = "true" ];
+  then
+    echo "INSTALL_PATH=forge" > ./forge_latest.properties
+    java -jar ./forge_latest/${file_installer} -options ./forge_latest.properties
+    rm -rf ./forge_latest*
+  else
+    echo "Extracting ${file_installer}"
+    bzip2 -d ./forge_latest/${file_installer}
+
+    file_tar=$(ls ./forge_latest)
+    if [ ! -f "./forge_latest/${file_tar}" ]; then echo "Install package not found"; rm -rf ./forge_latest; return 1; fi
+
+    tar -xf ./forge_latest/${file_tar} -C ./forge_latest && rm ./forge_latest/${file_tar}
+    mv ./forge_latest ./forge
+  fi
+
+  chmod +x ./forge/*.sh
+  echo "${file_installer}" > ./forge/version
+  alias forge="$(pwd)/forge/forge.sh"
 }
 
 function mcu {
