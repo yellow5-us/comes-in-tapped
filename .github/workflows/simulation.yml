@@ -79,8 +79,13 @@ env:
   HOME: '/home/runner'
 
 jobs:
+  cache:
+    name: Build cache
+    uses: ./.github/workflows/cache.yml
+
   sim:
     name: '${{ inputs.deck_name_player }} vs. ${{ inputs.deck_name_opponent }} (${{ inputs.rounds }}x)'
+    needs: [cache]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -105,6 +110,11 @@ jobs:
         run: |
           if [ ! -f "${{ inputs.deck_file_opponent }}" ]; then echo "${{ inputs.deck_file_opponent }} not found"; exit 1; fi
 
+      - name: Symlink deck path
+        run: |
+          mkdir -p $HOME/.forge/decks
+          rm -f $HOME/.forge/decks/constructed && ln -s $HOME/work/comes-in-tapped/comes-in-tapped $HOME/.forge/decks/constructed
+
       - name: Cache setup
         id: cache-forge
         uses: actions/cache@v3
@@ -113,20 +123,6 @@ jobs:
             ${{ env.HOME }}/forge
           key: forge
           restore-keys: forge
-
-      - name: Forge installation
-        if: steps.cache-forge.outputs.cache-hit != 'true'
-        working-directory: ${{ env.HOME }}
-        run: |
-          name=$(curl -s ${{ env.FORGE_SNAPSHOT_URL }} | grep -oE '"forge-desktop.+\.jar"' | sed -r 's/"//g')
-          echo "INSTALL_PATH=forge" > forge_latest.properties
-          curl -s ${{ env.FORGE_SNAPSHOT_URL }}${name} -o ./${name}
-          java -jar ./${name} -options forge_latest.properties
-
-      - name: Symlink deck path
-        run: |
-          mkdir -p $HOME/.forge/decks
-          rm -f $HOME/.forge/decks/constructed && ln -s $HOME/work/comes-in-tapped/comes-in-tapped $HOME/.forge/decks/constructed
 
       - name: Run simulation
         working-directory: ${{ env.HOME }}/forge
