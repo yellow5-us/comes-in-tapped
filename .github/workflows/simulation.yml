@@ -79,10 +79,6 @@ env:
   HOME: '/home/runner'
 
 jobs:
-  cache:
-    name: Build cache
-    uses: ./.github/workflows/cache.yml
-
   sim:
     name: '${{ inputs.deck_name_player }} vs. ${{ inputs.deck_name_opponent }} (${{ inputs.rounds }}x)'
     needs: [cache]

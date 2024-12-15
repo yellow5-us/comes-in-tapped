@@ -38,12 +38,8 @@ permissions:
   contents: read
 
 jobs:
-  cache:
-    name: Build cache
-    uses: ./.github/workflows/cache.yml
-
   playtest_info:
-    name: Playtest info
+    name: Get playtest info
     runs-on: ubuntu-latest
     outputs:
       rounds: ${{ steps.game.outputs.rounds }}
