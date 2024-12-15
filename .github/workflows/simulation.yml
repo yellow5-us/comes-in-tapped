@@ -115,6 +115,12 @@ jobs:
           mkdir -p $HOME/.forge/decks
           rm -f $HOME/.forge/decks/constructed && ln -s $HOME/work/comes-in-tapped/comes-in-tapped $HOME/.forge/decks/constructed
 
+      - name: Java setup
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Cache setup
         id: cache-forge
         uses: actions/cache@v3
