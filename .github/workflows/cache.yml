@@ -1,6 +1,7 @@
-name: '[Initialize Cache]'
+name: 'Cache Forge installation'
 
 on:
+  workflow_dispatch:
   workflow_call:
 
 permissions:
