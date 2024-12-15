@@ -76,7 +76,7 @@ jobs:
 
   playtest:
     name: ${{ needs.playtest_info.outputs.deck_name_player }} vs. ${{ matrix.deck_name_opponent }} (${{ needs.playtest_info.outputs.rounds }}x)
-    needs: [cache, playtest_info]
+    needs: [playtest_info]
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.playtest_info.outputs.deck_name_opponent_list) }}

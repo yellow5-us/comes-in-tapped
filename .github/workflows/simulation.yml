@@ -81,7 +81,6 @@ env:
 jobs:
   sim:
     name: '${{ inputs.deck_name_player }} vs. ${{ inputs.deck_name_opponent }} (${{ inputs.rounds }}x)'
-    needs: [cache]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
