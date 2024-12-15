@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Cache setup
         id: cache-forge
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ${{ env.HOME }}/forge
