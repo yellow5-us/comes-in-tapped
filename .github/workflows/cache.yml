@@ -1,4 +1,4 @@
-name: '[Cache Forge application]'
+name: 'Cache Forge installation'
 
 on:
   workflow_dispatch:

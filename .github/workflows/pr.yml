@@ -1,4 +1,4 @@
-name: '[Run Playtests on PR]'
+name: '[PR] Run Playtests on PR'
 
 on:
   pull_request:
