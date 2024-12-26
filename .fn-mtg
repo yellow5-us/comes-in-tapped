@@ -11,13 +11,13 @@ function fu {
 
   is_installer="true"
   file_regex='forge-installer-.+\.jar'
-  file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g')
+  file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g' | sort -r | head -n 1)
 
   if [ -z "$file_installer" ];
   then
     is_installer="false"
     file_regex='forge-gui-desktop.+\.bz2'
-    file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g')
+    file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g' | sort -r | head -n 1)
   fi
 
   if [ -z "$file_installer" ]; then echo "Forge installer not found at $url"; return 1; fi
