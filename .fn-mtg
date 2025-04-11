@@ -1,23 +1,17 @@
-# Instructions:
-# 1. Source this file (`source .fn-mtg`)
-# 2. Run stuff!
-
-# `fu` will download and install the latest forge version to a given directory, updating if it already exists
-# `f2d` will convert a forge xxxx.dck file to a decked xxxx.converted.dec file
-# `d2f` will convert a decked xxxx.dec file to a forge xxxx.converted.dck file
+alias forge="$(pwd)/forge/forge.sh"
 
 function fu {
-  url=https://downloads.cardforge.org/dailysnapshots/
+  url=https://github.com/Card-Forge/forge/releases/expanded_assets/daily-snapshots/
 
   is_installer="true"
-  file_regex='forge-installer-.+\.jar'
-  file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g' | sort -r | head -n 1)
+  file_regex='\/forge-installer-.+\.jar'
+  file_installer=$(curl -s $url | grep -oE $file_regex | sed -r 's/\///g' | sort -r | head -n 1)
 
   if [ -z "$file_installer" ];
   then
     is_installer="false"
-    file_regex='forge-gui-desktop.+\.bz2'
-    file_installer=$(curl -s $url | grep -oE '"'$file_regex'"' | sed -r 's/"//g' | sort -r | head -n 1)
+    file_regex='\/forge-gui-desktop-.+\.bz2'
+    file_installer=$(curl -s $url | grep -oE $file_regex | sed -r 's/\///g' | sort -r | head -n 1)
   fi
 
   if [ -z "$file_installer" ]; then echo "Forge installer not found at $url"; return 1; fi
@@ -27,8 +21,9 @@ function fu {
   rm -rf ./forge_latest
   mkdir -p ./forge_latest
 
-  echo "Downloading ${url}${file_installer}"
-  curl -s ${url}${file_installer} -o ./forge_latest/${file_installer}
+  file_download=https://github.com/Card-Forge/forge/releases/download/daily-snapshots/${file_installer}
+  echo "Downloading ${file_download}"
+  curl -Ls ${file_download} -o ./forge_latest/${file_installer}
 
   if [ ! -f "./forge_latest/${file_installer}" ]; then echo "Download failed"; rm -rf ./forge_latest; return 1; fi
 
@@ -58,7 +53,7 @@ function mcu {
   overwrite=$1
 
   url=https://mtgjson.com/api/v5/AllPrintings.json
-  if [ ! -f ~/AllPrintings.json ] || [ ! -z $overwrite ]; then curl -s $url -o ~/AllPrintings.json; fi
+  if [ ! -f ~/AllPrintings.json ] || [ -n $overwrite ]; then curl -s $url -o ~/AllPrintings.json; fi
   jq -r '.data[].cards[] | select (.language == "English" and (.isPromo == null or .isPromo == false) and (.availability | index("paper")) and (.isFullArt == null or .isFullArt == false) and (.side == null or .side == "a") and (.identifiers.multiverseId != null)) | .identifiers.multiverseId + ";" + .setCode + ";" + .name' ~/AllPrintings.json | grep -vE ';$' | sort -n > ~/mvid.list
 
   return 0
@@ -139,7 +134,7 @@ function f2d {
   do
     line=$(echo $line | sed -r 's/^[\s\r\t\n]//' | sed -r 's/[\s\r\t\n]$//')
     if [ -z "$line" ]; then continue; fi
-    if [ ! -z "$(echo $line | grep '^\[')" ];
+    if [ -n "$(echo $line | grep '^\[')" ];
     then
       section=$(echo $line | sed -r 's/(\[|\])//g')
       continue
@@ -153,7 +148,7 @@ function f2d {
     location="Deck"
     location_message="deck"
     prefix=""
-    if [ ! -z "$(echo $section | grep 'Sideboard')" ];
+    if [ -n "$(echo $section | grep 'Sideboard')" ];
     then
       location='SB'
       location_message="sideboard"
