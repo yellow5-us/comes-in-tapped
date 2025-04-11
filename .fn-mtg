@@ -1,4 +1,10 @@
-alias forge="$(pwd)/forge/forge.sh"
+# Instructions:
+# 1. Source this file (`source .fn-mtg`)
+# 2. Run stuff!
+
+# `fu` will download and install the latest forge version to a given directory, updating if it already exists
+# `f2d` will convert a forge xxxx.dck file to a decked xxxx.converted.dec file
+# `d2f` will convert a decked xxxx.dec file to a forge xxxx.converted.dck file
 
 function fu {
   url=https://github.com/Card-Forge/forge/releases/expanded_assets/daily-snapshots/
