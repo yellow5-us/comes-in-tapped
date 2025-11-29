@@ -75,7 +75,6 @@ permissions:
   contents: read
 
 env:
-  FORGE_SNAPSHOT_URL: 'https://downloads.cardforge.org/dailysnapshots/'
   HOME: '/home/runner'
 
 jobs:
