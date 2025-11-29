@@ -32,6 +32,7 @@ jobs:
 
       - name: Forge installation
         if: steps.cache-forge.outputs.cache-hit != 'true'
-        working-directory: ${{ env.HOME }}
         run: |
-          source ./.fn-mtg && fu
+          source ./.fn-mtg
+          cd ${{ env.HOME }}
+          fu
