@@ -26,34 +26,13 @@ jobs:
           key: forge
           restore-keys: forge
 
+      - name: Checkout
+        if: steps.cache-forge.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+
       - name: Forge installation
         if: steps.cache-forge.outputs.cache-hit != 'true'
-        working-directory: ${{ env.HOME }}
         run: |
-          is_installer="true"
-          file_installer=$(curl -s ${FORGE_SNAPSHOT_URL} | grep -oE '"forge-installer-.+\.jar"' | sed -r 's/"//g')
-
-          if [ -z "$file_installer" ];
-          then
-            is_installer="false"
-            file_installer=$(curl -s ${FORGE_SNAPSHOT_URL} | grep -oE '"forge-gui-desktop.+\.bz2"' | sed -r 's/"//g')
-          fi
-
-          mkdir -p ./forge_latest
-          curl -s ${FORGE_SNAPSHOT_URL}${file_installer} -o ./forge_latest/${file_installer}
-
-          if [ "$is_installer" = "true" ];
-          then
-            echo "INSTALL_PATH=forge" > ./forge_latest.properties
-            java -jar ./forge_latest/${file_installer} -options ./forge_latest.properties
-            rm -rf ./forge_latest*
-          else
-            echo "Extracting ${file_installer}"
-            bzip2 -d ./forge_latest/${file_installer}
-
-            file_tar=$(ls ./forge_latest)
-            tar -xf ./forge_latest/${file_tar} -C ./forge_latest && rm ./forge_latest/${file_tar}
-            mv ./forge_latest ./forge
-          fi
-
-          chmod +x ./forge/*.sh
+          source ./.fn-mtg
+          cd ${{ env.HOME }}
+          fu
