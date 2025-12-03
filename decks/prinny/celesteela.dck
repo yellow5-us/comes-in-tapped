@@ -1,24 +1,21 @@
 [metadata]
 Name=celesteela
-
 [Main]
-4 Angel of Vitality|M20
-4 Bishop of Wings|M20
-2 Bolas's Citadel|WAR
-4 Clifftop Retreat|ISD
-4 Fountain of Renewal|M19
-4 Godless Shrine|GPT
-4 Isolated Chapel|ISD
-2 Kaalia, Zenith Seeker|M20
-2 Lyra Dawnbringer|DOM
-4 Plains|ZNR
-4 Resplendent Angel|M19
-4 Revitalize|M19
-4 Sacred Foundry|RAV
-2 Sephara, Sky's Blade|M20
-2 Seraph of the Scales|RNA
-4 Settle the Wreckage|XLN
-2 Shalai, Voice of Plenty|DOM
-4 Swamp|ZNR
-
-[Sideboard]
+4 Angel of Vitality|M20|[4]
+4 Bishop of Wings|M20|[8]
+2 Bolas's Citadel|WAR|[79]
+4 Fountain of Renewal|M19|[235]
+3 Giada, Font of Hope|SNC|[14]
+3 Gisela, the Broken Blade|EMN|[28]
+4 Godless Shrine|RNA|[248]
+4 Isolated Chapel|DOM|[241]
+3 Lyra Dawnbringer|DOM|[26]
+2 Paraselene|ISD|[26]
+6 Plains|DFT|[277]
+4 Resplendent Angel|M19|[34]
+2 Sephara, Sky's Blade|M20|[36]
+4 Seraph Sanctuary|AVR|[228]
+2 Shalai, Voice of Plenty|DOM|[35]
+2 Shineshadow Snarl|STX|[272]
+4 Swamp|BLB|[373]
+3 Youthful Valkyrie|KHM|[382]
